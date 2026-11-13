@@ -1,0 +1,10 @@
+[
+  {"code": "BED", "name": "Bedford (Hanscom Field)", "lat": 42.4700, "lon": -71.2890, "open": "00:00", "close": "24:00"},
+  {"code": "TEB", "name": "Teterboro", "lat": 40.8501, "lon": -74.0608, "open": "00:00", "close": "24:00"},
+  {"code": "PBI", "name": "Palm Beach International", "lat": 26.6832, "lon": -80.0956, "open": "00:00", "close": "24:00"},
+  {"code": "HPN", "name": "White Plains (Westchester County)", "lat": 41.0670, "lon": -73.7076, "open": "06:00", "close": "23:00"},
+  {"code": "ACK", "name": "Nantucket Memorial", "lat": 41.2531, "lon": -70.0602, "open": "06:00", "close": "23:00"},
+  {"code": "IAD", "name": "Washington Dulles", "lat": 38.9445, "lon": -77.4558, "open": "00:00", "close": "24:00"},
+  {"code": "APF", "name": "Naples Municipal", "lat": 26.1526, "lon": -81.7753, "open": "06:00", "close": "22:00"},
+  {"code": "SAN", "name": "San Diego International", "lat": 32.7336, "lon": -117.1897, "open": "06:30", "close": "23:30"}
+]

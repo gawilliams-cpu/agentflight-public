@@ -1,0 +1,6 @@
+[
+  {"id": "chg-001", "trip": "C", "status": "Waiting", "reason": "On vendor confirmations", "summary": "HPN FBO has not yet confirmed Friday handling", "created": "2026-10-26T15:20", "awaiting_services": ["C-S1"]},
+  {"id": "chg-002", "trip": "I", "status": "Waiting", "reason": "On client", "summary": "Names requested for two added passengers", "created": "2026-10-26T11:05"},
+  {"id": "chg-003", "trip": "G", "status": "Done", "reason": null, "summary": "Return moved from 12:00 to 14:00; all parties confirmed", "created": "2026-10-25T16:40"},
+  {"id": "chg-004", "trip": "A2", "status": "Done", "reason": null, "summary": "Sedan added at TEB on arrival; confirmed", "created": "2026-10-24T10:15"}
+]

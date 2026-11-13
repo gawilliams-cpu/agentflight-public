@@ -1,0 +1,69 @@
+{
+ "note": "Aircraft photos for the Reference view (display only). Wikimedia Commons, credited as their licences require. 'mask' blurs the real registration (percent of the image). Exteriors are cropped to 2:1.",
+ "phenom_300": [
+  {
+   "file": "phenom-exterior-whole.jpg",
+   "caption": "Exterior",
+   "credit": "paullymac",
+   "license": "CC BY-SA 2.0",
+   "source": "https://commons.wikimedia.org/wiki/File:Embraer_Phenom_300_at_Christmas_Island_Airport.jpg",
+   "kind": "exterior"
+  },
+  {
+   "file": "phenom-cabin.jpg",
+   "caption": "Cabin",
+   "credit": "JetRequest.com",
+   "license": "CC BY-SA 3.0",
+   "source": "https://commons.wikimedia.org/wiki/File:Embraer_Phenom_300_interior_cabin.jpg",
+   "kind": "cabin"
+  }
+ ],
+ "challenger_350": [
+  {
+   "file": "challenger-exterior.jpg",
+   "caption": "Exterior",
+   "credit": "Acroterion",
+   "license": "CC BY-SA 4.0",
+   "source": "https://commons.wikimedia.org/wiki/File:Bombardier_Challenger_350_N1980Z.jpg",
+   "mask": {
+    "x": 41.6,
+    "y": 44.6,
+    "w": 4.0,
+    "h": 4.2
+   },
+   "kind": "exterior"
+  },
+  {
+   "file": "challenger-cabin.jpg",
+   "caption": "Cabin (Challenger 300, same cabin)",
+   "credit": "JetRequest.com",
+   "license": "CC BY-SA 3.0",
+   "source": "https://commons.wikimedia.org/wiki/File:Bombardier_Challenger_300_interior.JPG",
+   "kind": "cabin"
+  }
+ ],
+ "citation_xls": [
+  {
+   "file": "xls-exterior.jpg",
+   "caption": "Exterior",
+   "credit": "MQYCFM",
+   "license": "CC BY-SA 4.0",
+   "source": "https://commons.wikimedia.org/wiki/File:N789KG.JPG",
+   "mask": {
+    "x": 65.4,
+    "y": 25.4,
+    "w": 4.0,
+    "h": 5.7
+   },
+   "kind": "exterior"
+  },
+  {
+   "file": "xls-cabin.jpg",
+   "caption": "Cabin",
+   "credit": "Matti Blume",
+   "license": "CC BY-SA 4.0",
+   "source": "https://commons.wikimedia.org/wiki/File:EBACE_2019,_Le_Grand-Saconnex_(EB190537).jpg",
+   "kind": "cabin"
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "4a",
+  "title": "The client replies to the options email: \"Option A\" (demo change 3)",
+  "type": "Happy path (demo)",
+  "expected": "After the options were emailed, Morgan picks option A: change package moving leg 2 to 17:45, crew duty re-checked, $500 change fee, updates to the client, crew, BED FBO, BED caterer and PBI FBO; nothing sent before approval.",
+  "fixture": "options-sent",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Re: Thursday — Bedford departure",
+    "body": "Hi,\n\nOption A works for Alex — let's go with 5:45. Thank you for sorting this out so quickly!\n\nMorgan\n\n> On Tue, Oct 27, Larkhaven Air operations team wrote:\n> Here are the options that work:\n> A) Depart Bedford at 17:45 (arrive PBI 20:28), same crew. Change fee: $500.\n> B) Depart Bedford at 18:00 as requested, and move the morning TEB–BED leg to 08:15. Change fees: $1,000.\n> C) Depart Bedford at 18:00 as requested with a different crew taking that leg. Fees: $3,000 total.\n> Which would you prefer?"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:45"
+    },
+    {
+      "type": "no_record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T18:00"
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    },
+    {
+      "type": "recipients",
+      "include": [
+        "morgan.pryce@haldenridge.example.com",
+        [
+          "dana.whitlock@larkhaven.example.com",
+          "marcus.reyes@larkhaven.example.com"
+        ],
+        "desk@concordlane.example.com",
+        "orders@fenwicktable.example.com",
+        "concierge@palmettocoast.example.com"
+      ],
+      "exclude": [
+        "csr@hackensackriverjet.example.com"
+      ]
+    },
+    {
+      "type": "fee_total",
+      "amount": 500
+    }
+  ],
+  "start": []
+}

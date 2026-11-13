@@ -1,0 +1,48 @@
+{
+  "id": "2",
+  "title": "One passenger is gluten free",
+  "type": "Happy path",
+  "expected": "Change package for catering only: the caterer is told; no flight checks run; no FBO or crew messages; no charge.",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Thursday dinner",
+    "body": "Hi team,\n\nQuick note for Thursday's flight to Palm Beach: Sofia Brandt is gluten free. Could you make sure her dinner works for her?\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "recipients",
+      "include": [
+        "orders@fenwicktable.example.com"
+      ],
+      "exclude": [
+        "desk@concordlane.example.com",
+        "csr@hackensackriverjet.example.com",
+        "concierge@palmettocoast.example.com",
+        "dana.whitlock@larkhaven.example.com",
+        "marcus.reyes@larkhaven.example.com"
+      ]
+    },
+    {
+      "type": "checks_run",
+      "exclude": [
+        "check_crew_duty",
+        "check_airport_hours",
+        "check_range_and_flight_time",
+        "check_aircraft_schedule",
+        "check_aircraft_availability",
+        "find_available_crew",
+        "check_capacity"
+      ]
+    },
+    {
+      "type": "fee_total",
+      "amount": 0
+    }
+  ],
+  "start": []
+}

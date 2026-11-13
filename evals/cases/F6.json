@@ -1,0 +1,48 @@
+{
+  "id": "F6",
+  "title": "Caterer confirms the new delivery time",
+  "type": "Execution",
+  "expected": "The caterer confirms the new delivery time: a change package marking catering confirmed.",
+  "start": [
+    {
+      "op": "move_leg",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:00"
+    },
+    {
+      "op": "update_service",
+      "service_id": "A1-S3",
+      "status": "requested",
+      "details": "Dinner for 5, delivered to the aircraft at 16:15"
+    }
+  ],
+  "email": {
+    "from": "orders@fenwicktable.example.com",
+    "subject": "RE: Catering time change, N307LH 10/29 BED",
+    "body": "Hello,\n\nConfirmed: dinner for 5 will be delivered to N307LH at Bedford at 16:15 on Thursday 10/29.\n\nThank you,\nOrders\nFenwick Table Catering"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "service_update",
+      "service_id": "A1-S3",
+      "status": "confirmed"
+    },
+    {
+      "type": "checks_run",
+      "exclude": [
+        "check_crew_duty",
+        "check_airport_hours",
+        "check_range_and_flight_time",
+        "check_aircraft_schedule",
+        "check_aircraft_availability",
+        "find_available_crew",
+        "find_duty_fixes"
+      ]
+    }
+  ]
+}

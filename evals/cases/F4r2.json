@@ -1,0 +1,35 @@
+{
+  "id": "F4r2",
+  "title": "Trip manager rejects the delay: keep the 16:00 departure",
+  "type": "Execution",
+  "expected": "The trip manager rejects the delay (\"keep 16:00\"): no change package and no move to 17:00; a question to the client instead.",
+  "start": [],
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Thursday — Bedford departure",
+    "body": "Hi team,\n\nAlex's afternoon meeting on Thursday is running long. Could we push the departure from Bedford to Palm Beach back an hour, to 5pm? Everything else can stay as planned.\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "revision": {
+    "previous_summary": "Morgan asks to move Thu 10/29 BED→PBI (A1-2) from 16:00 to 17:00. Checks passed: crew duty (Whitlock/Reyes 13h13m of 14h, rest legal), BED and PBI open 24h, N307LH schedule clean. Arrival moves to 19:43. Fee: $500 departure time change (24–72h tier). Affected: BED FBO, BED caterer, PBI FBO, crew.",
+    "instructions": "Don't move the BED departure; it has to stay at 16:00. Ask Morgan whether 4pm can still work."
+  },
+  "expect": [
+    {
+      "type": "no_record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:00"
+    },
+    {
+      "type": "no_change_package"
+    },
+    {
+      "type": "question_for_client"
+    },
+    {
+      "type": "checks_run",
+      "exclude": [
+        "check_crew_duty"
+      ]
+    }
+  ]
+}

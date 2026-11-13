@@ -1,0 +1,51 @@
+{
+  "id": "1",
+  "title": "Push BED departure to 17:00 (demo change 1)",
+  "type": "Happy path (demo)",
+  "expected": "Change package: leg 2 moves to 17:00; crew duty and airport hours checked; updates to the client, crew, BED FBO, BED caterer and PBI FBO, nothing to the TEB FBO; $500 change fee; nothing sent before approval.",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Thursday — Bedford departure",
+    "body": "Hi team,\n\nAlex's afternoon meeting on Thursday is running long. Could we push the departure from Bedford to Palm Beach back an hour, to 5pm? Everything else can stay as planned.\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:00"
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        "check_crew_duty",
+        "check_airport_hours"
+      ]
+    },
+    {
+      "type": "recipients",
+      "include": [
+        "morgan.pryce@haldenridge.example.com",
+        [
+          "dana.whitlock@larkhaven.example.com",
+          "marcus.reyes@larkhaven.example.com"
+        ],
+        "desk@concordlane.example.com",
+        "orders@fenwicktable.example.com",
+        "concierge@palmettocoast.example.com"
+      ],
+      "exclude": [
+        "csr@hackensackriverjet.example.com"
+      ]
+    },
+    {
+      "type": "fee_total",
+      "amount": 500
+    }
+  ],
+  "start": []
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "whitlock-reyes",
+    "name": "Whitlock/Reyes",
+    "rating": "phenom_300",
+    "base": "BED",
+    "members": [
+      {"role": "Captain", "name": "Dana Whitlock", "email": "dana.whitlock@larkhaven.example.com", "phone": "617-555-0110"},
+      {"role": "First Officer", "name": "Marcus Reyes", "email": "marcus.reyes@larkhaven.example.com", "phone": "617-555-0111"}
+    ]
+  },
+  {
+    "id": "nandakumar-kessler",
+    "name": "Nandakumar/Kessler",
+    "rating": "phenom_300",
+    "base": "BED",
+    "members": [
+      {"role": "Captain", "name": "Priya Nandakumar", "email": "priya.nandakumar@larkhaven.example.com", "phone": "617-555-0112"},
+      {"role": "First Officer", "name": "Tom Kessler", "email": "tom.kessler@larkhaven.example.com", "phone": "617-555-0113"}
+    ]
+  },
+  {
+    "id": "brooks-okafor",
+    "name": "Brooks/Okafor",
+    "rating": "challenger_350",
+    "base": "BED",
+    "members": [
+      {"role": "Captain", "name": "Elena Brooks", "email": "elena.brooks@larkhaven.example.com", "phone": "617-555-0114"},
+      {"role": "First Officer", "name": "Sam Okafor", "email": "sam.okafor@larkhaven.example.com", "phone": "617-555-0115"}
+    ]
+  },
+  {
+    "id": "delgado-lau",
+    "name": "Delgado/Lau",
+    "rating": "citation_xls",
+    "base": "TEB",
+    "members": [
+      {"role": "Captain", "name": "Ray Delgado", "email": "ray.delgado@larkhaven.example.com", "phone": "201-555-0116"},
+      {"role": "First Officer", "name": "Kim Lau", "email": "kim.lau@larkhaven.example.com", "phone": "201-555-0117"}
+    ]
+  }
+]

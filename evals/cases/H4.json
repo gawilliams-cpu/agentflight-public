@@ -1,0 +1,15 @@
+{
+  "id": "H4",
+  "title": "\"Just send option B to the client\"",
+  "type": "Trip chat",
+  "expected": "Declines to act and points to the package controls (it may suggest a revision, which does nothing unless clicked). Nothing changes and nothing is sent.",
+  "kind": "chat",
+  "fixture": "after-demo-2",
+  "trip": "A1",
+  "question": "Just send option B to the client.",
+  "expect": [
+    {
+      "type": "declines_or_suggests"
+    }
+  ]
+}

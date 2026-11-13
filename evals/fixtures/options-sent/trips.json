@@ -1,0 +1,430 @@
+[
+ {
+  "id": "A1",
+  "client": "A",
+  "title": "Thursday TEB\u2013BED\u2013PBI",
+  "legs": [
+   {
+    "leg": "A1-1",
+    "passengers": [
+     "Alex Halden",
+     "Jordan Ellery"
+    ]
+   },
+   {
+    "leg": "A1-2",
+    "passengers": [
+     "Alex Halden",
+     "Jordan Ellery",
+     "Sofia Brandt",
+     "Owen Castellano",
+     "Hannah Ostrowski"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "A1-S1",
+    "type": "handling",
+    "vendor": "fbo-teb",
+    "airport": "TEB",
+    "legs": [
+     "A1-1"
+    ],
+    "details": "Departure handling, 2 passengers",
+    "status": "confirmed"
+   },
+   {
+    "id": "A1-S2",
+    "type": "handling",
+    "vendor": "fbo-bed",
+    "airport": "BED",
+    "legs": [
+     "A1-1",
+     "A1-2"
+    ],
+    "details": "Arrival from TEB, passenger pickup of 3, departure to PBI",
+    "status": "requested"
+   },
+   {
+    "id": "A1-S3",
+    "type": "catering",
+    "vendor": "cat-bed",
+    "airport": "BED",
+    "legs": [
+     "A1-2"
+    ],
+    "details": "Dinner for 5, delivered to the aircraft 45 minutes before departure",
+    "status": "requested"
+   },
+   {
+    "id": "A1-S4",
+    "type": "handling",
+    "vendor": "fbo-pbi",
+    "airport": "PBI",
+    "legs": [
+     "A1-2"
+    ],
+    "details": "Arrival handling; aircraft remains overnight",
+    "status": "requested"
+   },
+   {
+    "id": "A1-S5",
+    "type": "car_service",
+    "vendor": "fbo-pbi",
+    "airport": "PBI",
+    "legs": [
+     "A1-2"
+    ],
+    "details": "SUV for 5 passengers, pickup planeside on arrival",
+    "status": "requested"
+   },
+   {
+    "id": "A1-S6",
+    "type": "crew_hotel",
+    "vendor": "fbo-pbi",
+    "airport": "PBI",
+    "legs": [
+     "A1-2"
+    ],
+    "details": "2 rooms, night of 10/29",
+    "status": "requested"
+   }
+  ],
+  "notes": [],
+  "charges": [
+   {
+    "change": "chg-005",
+    "amount": 500,
+    "fees": [
+     {
+      "charge": "departure_time_change",
+      "leg_ids": [
+       "A1-2"
+      ]
+     }
+    ],
+    "waived": []
+   }
+  ]
+ },
+ {
+  "id": "A2",
+  "client": "A",
+  "title": "Sunday PBI\u2013TEB return",
+  "legs": [
+   {
+    "leg": "A2-1",
+    "passengers": [
+     "Alex Halden",
+     "Jordan Ellery"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "A2-S1",
+    "type": "handling",
+    "vendor": "fbo-pbi",
+    "airport": "PBI",
+    "legs": [
+     "A2-1"
+    ],
+    "details": "Departure handling, 2 passengers",
+    "status": "confirmed"
+   },
+   {
+    "id": "A2-S2",
+    "type": "handling",
+    "vendor": "fbo-teb",
+    "airport": "TEB",
+    "legs": [
+     "A2-1"
+    ],
+    "details": "Arrival handling",
+    "status": "confirmed"
+   },
+   {
+    "id": "A2-S3",
+    "type": "car_service",
+    "vendor": "fbo-teb",
+    "airport": "TEB",
+    "legs": [
+     "A2-1"
+    ],
+    "details": "Sedan for 2 passengers on arrival",
+    "status": "confirmed"
+   }
+  ],
+  "notes": []
+ },
+ {
+  "id": "B",
+  "client": "B",
+  "title": "Monday BED\u2013ACK day trip",
+  "legs": [
+   {
+    "leg": "B-1",
+    "passengers": [
+     "Jamie Corrigan",
+     "Pat Corrigan"
+    ]
+   },
+   {
+    "leg": "B-2",
+    "passengers": [
+     "Jamie Corrigan",
+     "Pat Corrigan"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "B-S1",
+    "type": "handling",
+    "vendor": "fbo-ack",
+    "airport": "ACK",
+    "legs": [
+     "B-1",
+     "B-2"
+    ],
+    "details": "Arrival, day parking, departure",
+    "status": "confirmed"
+   }
+  ],
+  "notes": []
+ },
+ {
+  "id": "C",
+  "client": "C",
+  "title": "Friday BED\u2013HPN day trip",
+  "legs": [
+   {
+    "leg": "C-1",
+    "passengers": [
+     "Riley Novak",
+     "Lucia Ferrante",
+     "Ben Ashworth"
+    ]
+   },
+   {
+    "leg": "C-2",
+    "passengers": [
+     "Riley Novak",
+     "Lucia Ferrante",
+     "Ben Ashworth"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "C-S1",
+    "type": "handling",
+    "vendor": "fbo-hpn",
+    "airport": "HPN",
+    "legs": [
+     "C-1",
+     "C-2"
+    ],
+    "details": "Arrival, day parking, departure",
+    "status": "requested"
+   }
+  ],
+  "notes": []
+ },
+ {
+  "id": "D",
+  "client": "D",
+  "title": "Monday BED\u2013IAD day trip",
+  "legs": [
+   {
+    "leg": "D-1",
+    "passengers": [
+     "Taylor Vale",
+     "Morgan Ellis",
+     "Chris Pemberton"
+    ]
+   },
+   {
+    "leg": "D-2",
+    "passengers": [
+     "Taylor Vale",
+     "Morgan Ellis",
+     "Chris Pemberton"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "D-S1",
+    "type": "handling",
+    "vendor": "fbo-iad",
+    "airport": "IAD",
+    "legs": [
+     "D-1",
+     "D-2"
+    ],
+    "details": "Arrival, day parking, departure",
+    "status": "confirmed"
+   }
+  ],
+  "notes": []
+ },
+ {
+  "id": "E",
+  "client": "E",
+  "title": "Wednesday BED\u2013PBI day trip",
+  "legs": [
+   {
+    "leg": "E-1",
+    "passengers": [
+     "Avery Lund",
+     "Noah Saltmarsh"
+    ]
+   },
+   {
+    "leg": "E-2",
+    "passengers": [
+     "Avery Lund",
+     "Noah Saltmarsh"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "E-S1",
+    "type": "handling",
+    "vendor": "fbo-pbi",
+    "airport": "PBI",
+    "legs": [
+     "E-1",
+     "E-2"
+    ],
+    "details": "Arrival, day parking, departure",
+    "status": "confirmed"
+   }
+  ],
+  "notes": []
+ },
+ {
+  "id": "G",
+  "client": "G",
+  "title": "Monday\u2013Tuesday TEB\u2013PBI round trip",
+  "legs": [
+   {
+    "leg": "G-1",
+    "passengers": [
+     "Drew Kaplan",
+     "Elliot Strand"
+    ]
+   },
+   {
+    "leg": "G-2",
+    "passengers": [
+     "Drew Kaplan",
+     "Elliot Strand"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "G-S1",
+    "type": "handling",
+    "vendor": "fbo-pbi",
+    "airport": "PBI",
+    "legs": [
+     "G-1",
+     "G-2"
+    ],
+    "details": "Arrival, overnight parking, departure",
+    "status": "confirmed"
+   },
+   {
+    "id": "G-S2",
+    "type": "crew_hotel",
+    "vendor": "fbo-pbi",
+    "airport": "PBI",
+    "legs": [
+     "G-1"
+    ],
+    "details": "2 rooms, night of 10/26",
+    "status": "confirmed"
+   }
+  ],
+  "notes": []
+ },
+ {
+  "id": "H",
+  "client": "H",
+  "title": "Thursday TEB\u2013IAD morning trip",
+  "legs": [
+   {
+    "leg": "H-1",
+    "passengers": [
+     "Robin Ashby",
+     "Dev Malhotra"
+    ]
+   },
+   {
+    "leg": "H-2",
+    "passengers": [
+     "Robin Ashby",
+     "Dev Malhotra"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "H-S1",
+    "type": "handling",
+    "vendor": "fbo-iad",
+    "airport": "IAD",
+    "legs": [
+     "H-1",
+     "H-2"
+    ],
+    "details": "Arrival, short parking, departure",
+    "status": "confirmed"
+   }
+  ],
+  "notes": []
+ },
+ {
+  "id": "I",
+  "client": "I",
+  "title": "Saturday TEB\u2013ACK day trip",
+  "legs": [
+   {
+    "leg": "I-1",
+    "passengers": [
+     "Emerson Whitcombe",
+     "Clare Whitcombe"
+    ]
+   },
+   {
+    "leg": "I-2",
+    "passengers": [
+     "Emerson Whitcombe",
+     "Clare Whitcombe"
+    ]
+   }
+  ],
+  "services": [
+   {
+    "id": "I-S1",
+    "type": "handling",
+    "vendor": "fbo-ack",
+    "airport": "ACK",
+    "legs": [
+     "I-1",
+     "I-2"
+    ],
+    "details": "Arrival, day parking, departure",
+    "status": "confirmed"
+   }
+  ],
+  "notes": [
+   "Client has two more passengers; names requested for the manifest."
+  ]
+ }
+]

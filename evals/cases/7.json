@@ -1,0 +1,37 @@
+{
+  "id": "7",
+  "title": "Email could mean either of the client's two trips",
+  "type": "Edge",
+  "expected": "An email that could mean either of the client's two trips: a question to the client asking which trip; no change package.",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Departure time",
+    "body": "Hi team,\n\nCould we push our departure back an hour?\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Question for client"
+    },
+    {
+      "type": "no_change_package"
+    },
+    {
+      "type": "question_for_client"
+    },
+    {
+      "type": "checks_run",
+      "exclude": [
+        "check_crew_duty",
+        "check_airport_hours",
+        "check_range_and_flight_time",
+        "check_aircraft_schedule",
+        "check_aircraft_availability",
+        "find_available_crew",
+        "find_duty_fixes"
+      ]
+    }
+  ],
+  "start": []
+}

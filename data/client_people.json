@@ -1,0 +1,407 @@
+{
+ "note": "Synthetic people for the Reference view's Clients tab (display only; the agent and the checks never read this file). Phone numbers use 555 exchanges; passport numbers are made up.",
+ "clients": {
+  "A": [
+   {
+    "name": "Alex Halden",
+    "role": "Principal",
+    "phone": "617-555-1301",
+    "home": "Concord, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA8213759",
+     "expires": "2029-02"
+    }
+   },
+   {
+    "name": "Morgan Pryce",
+    "role": "Executive assistant",
+    "phone": "617-555-1302",
+    "home": "Lexington, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA6427518",
+     "expires": "2030-03"
+    }
+   },
+   {
+    "name": "Jordan Ellery",
+    "role": "Managing director",
+    "phone": "201-555-1303",
+    "home": "Montclair, NJ",
+    "nearest_airport": "TEB",
+    "passport": {
+     "country": "USA",
+     "number": "XA4641277",
+     "expires": "2031-04"
+    }
+   },
+   {
+    "name": "Sofia Brandt",
+    "role": "Partner",
+    "phone": "617-555-1304",
+    "home": "Wellesley, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "DEU",
+     "number": "DE2855036",
+     "expires": "2032-05"
+    }
+   },
+   {
+    "name": "Owen Castellano",
+    "role": "Associate",
+    "phone": "617-555-1305",
+    "home": "Cambridge, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA1068795",
+     "expires": "2033-06"
+    }
+   },
+   {
+    "name": "Hannah Ostrowski",
+    "role": "Associate",
+    "phone": "617-555-1306",
+    "home": "Boston, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "POL",
+     "number": "PO9282554",
+     "expires": "2028-07"
+    }
+   },
+   {
+    "name": "Grace Halden",
+    "role": "Family",
+    "phone": "617-555-1307",
+    "home": "Concord, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA7496313",
+     "expires": "2029-08"
+    }
+   },
+   {
+    "name": "Theo Halden",
+    "role": "Family",
+    "phone": "617-555-1308",
+    "home": "Concord, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA5710072",
+     "expires": "2030-09"
+    }
+   }
+  ],
+  "B": [
+   {
+    "name": "Jamie Corrigan",
+    "role": "Principal",
+    "phone": "617-555-1309",
+    "home": "Marblehead, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA3923831",
+     "expires": "2031-10"
+    }
+   },
+   {
+    "name": "Pat Corrigan",
+    "role": "Family",
+    "phone": "617-555-1310",
+    "home": "Marblehead, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA2137590",
+     "expires": "2032-11"
+    }
+   },
+   {
+    "name": "Lena Corrigan",
+    "role": "Family",
+    "phone": "617-555-1311",
+    "home": "Marblehead, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "IRL",
+     "number": "IR0351349",
+     "expires": "2033-12"
+    }
+   }
+  ],
+  "C": [
+   {
+    "name": "Riley Novak",
+    "role": "Executive assistant",
+    "phone": "914-555-1312",
+    "home": "Rye, NY",
+    "nearest_airport": "HPN",
+    "passport": {
+     "country": "USA",
+     "number": "XA8565108",
+     "expires": "2028-01"
+    }
+   },
+   {
+    "name": "Ben Ashworth",
+    "role": "Chief executive",
+    "phone": "914-555-1313",
+    "home": "Greenwich, CT",
+    "nearest_airport": "HPN",
+    "passport": {
+     "country": "GBR",
+     "number": "GB6778867",
+     "expires": "2029-02"
+    }
+   },
+   {
+    "name": "Lucia Ferrante",
+    "role": "Chief scientist",
+    "phone": "914-555-1314",
+    "home": "Scarsdale, NY",
+    "nearest_airport": "HPN",
+    "passport": {
+     "country": "ITA",
+     "number": "IT4992626",
+     "expires": "2030-03"
+    }
+   },
+   {
+    "name": "Marek Dvorak",
+    "role": "Board member",
+    "phone": "212-555-1315",
+    "home": "Prague",
+    "nearest_airport": "\u2014",
+    "passport": {
+     "country": "CZE",
+     "number": "CZ3206385",
+     "expires": "2031-04"
+    }
+   }
+  ],
+  "D": [
+   {
+    "name": "Taylor Vale",
+    "role": "Partner",
+    "phone": "703-555-1316",
+    "home": "Chevy Chase, MD",
+    "nearest_airport": "IAD",
+    "passport": {
+     "country": "USA",
+     "number": "XA1420144",
+     "expires": "2032-05"
+    }
+   },
+   {
+    "name": "Chris Pemberton",
+    "role": "Partner",
+    "phone": "703-555-1317",
+    "home": "McLean, VA",
+    "nearest_airport": "IAD",
+    "passport": {
+     "country": "USA",
+     "number": "XA9633903",
+     "expires": "2033-06"
+    }
+   },
+   {
+    "name": "Morgan Ellis",
+    "role": "Senior associate",
+    "phone": "703-555-1318",
+    "home": "Arlington, VA",
+    "nearest_airport": "IAD",
+    "passport": {
+     "country": "USA",
+     "number": "XA7847662",
+     "expires": "2028-07"
+    }
+   }
+  ],
+  "E": [
+   {
+    "name": "Avery Lund",
+    "role": "Office manager",
+    "phone": "617-555-1319",
+    "home": "Boston, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA6061421",
+     "expires": "2029-08"
+    }
+   },
+   {
+    "name": "Noah Saltmarsh",
+    "role": "Founder",
+    "phone": "561-555-1320",
+    "home": "Palm Beach, FL",
+    "nearest_airport": "PBI",
+    "passport": {
+     "country": "USA",
+     "number": "XA4275180",
+     "expires": "2030-09"
+    }
+   },
+   {
+    "name": "Ingrid Saltmarsh",
+    "role": "Family",
+    "phone": "561-555-1321",
+    "home": "Palm Beach, FL",
+    "nearest_airport": "PBI",
+    "passport": {
+     "country": "SWE",
+     "number": "SW2488939",
+     "expires": "2031-10"
+    }
+   }
+  ],
+  "F": [
+   {
+    "name": "Quinn Adair",
+    "role": "Director",
+    "phone": "239-555-1322",
+    "home": "Naples, FL",
+    "nearest_airport": "APF",
+    "passport": {
+     "country": "USA",
+     "number": "XA0702698",
+     "expires": "2032-11"
+    }
+   },
+   {
+    "name": "Rosa Adair",
+    "role": "Trustee",
+    "phone": "239-555-1323",
+    "home": "Naples, FL",
+    "nearest_airport": "APF",
+    "passport": {
+     "country": "USA",
+     "number": "XA8916457",
+     "expires": "2033-12"
+    }
+   }
+  ],
+  "G": [
+   {
+    "name": "Drew Kaplan",
+    "role": "Executive assistant",
+    "phone": "201-555-1324",
+    "home": "Hoboken, NJ",
+    "nearest_airport": "TEB",
+    "passport": {
+     "country": "USA",
+     "number": "XA7130216",
+     "expires": "2028-01"
+    }
+   },
+   {
+    "name": "Elliot Strand",
+    "role": "General partner",
+    "phone": "201-555-1325",
+    "home": "Tenafly, NJ",
+    "nearest_airport": "TEB",
+    "passport": {
+     "country": "USA",
+     "number": "XA5343975",
+     "expires": "2029-02"
+    }
+   },
+   {
+    "name": "Maya Strand",
+    "role": "Family",
+    "phone": "201-555-1326",
+    "home": "Tenafly, NJ",
+    "nearest_airport": "TEB",
+    "passport": {
+     "country": "USA",
+     "number": "XA3557734",
+     "expires": "2030-03"
+    }
+   }
+  ],
+  "H": [
+   {
+    "name": "Robin Ashby",
+    "role": "Chief of staff",
+    "phone": "914-555-1327",
+    "home": "Westport, CT",
+    "nearest_airport": "HPN",
+    "passport": {
+     "country": "USA",
+     "number": "XA1771493",
+     "expires": "2031-04"
+    }
+   },
+   {
+    "name": "Dev Malhotra",
+    "role": "Chief executive",
+    "phone": "914-555-1328",
+    "home": "Darien, CT",
+    "nearest_airport": "HPN",
+    "passport": {
+     "country": "IND",
+     "number": "IN9985252",
+     "expires": "2032-05"
+    }
+   },
+   {
+    "name": "Kai Malhotra",
+    "role": "Family",
+    "phone": "914-555-1329",
+    "home": "Darien, CT",
+    "nearest_airport": "HPN",
+    "passport": {
+     "country": "USA",
+     "number": "XA8199011",
+     "expires": "2033-06"
+    }
+   }
+  ],
+  "I": [
+   {
+    "name": "Emerson Whitcombe",
+    "role": "Principal",
+    "phone": "508-555-1330",
+    "home": "Nantucket, MA",
+    "nearest_airport": "ACK",
+    "passport": {
+     "country": "USA",
+     "number": "XA6412770",
+     "expires": "2028-07"
+    }
+   },
+   {
+    "name": "Clare Whitcombe",
+    "role": "Family",
+    "phone": "508-555-1331",
+    "home": "Nantucket, MA",
+    "nearest_airport": "ACK",
+    "passport": {
+     "country": "USA",
+     "number": "XA4626529",
+     "expires": "2029-08"
+    }
+   },
+   {
+    "name": "Hugo Whitcombe",
+    "role": "Family",
+    "phone": "617-555-1332",
+    "home": "Beacon Hill, Boston, MA",
+    "nearest_airport": "BED",
+    "passport": {
+     "country": "USA",
+     "number": "XA2840288",
+     "expires": "2030-09"
+    }
+   }
+  ]
+ }
+}

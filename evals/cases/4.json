@@ -1,0 +1,40 @@
+{
+  "id": "4",
+  "title": "After a one-hour push, push another hour, to 18:00: breaks crew duty, options offered",
+  "type": "Boundary (demo)",
+  "expected": "After change 1, pushing to 18:00 is held: options for the client, at least two, each passing every check and priced from the rate card; leg 2 is not moved.",
+  "start": [
+    {
+      "op": "move_leg",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:00"
+    }
+  ],
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Re: Thursday — Bedford departure",
+    "body": "Hi again,\n\nSorry to do this — the meeting is now looking even later. Could we move the Bedford departure to 6pm instead?\n\nThanks so much,\nMorgan"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Options for client"
+    },
+    {
+      "type": "no_record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T18:00"
+    },
+    {
+      "type": "options",
+      "min": 2
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        "find_duty_fixes"
+      ]
+    }
+  ]
+}

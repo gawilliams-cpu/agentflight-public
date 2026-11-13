@@ -1,0 +1,1630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentFlight</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2072%2072%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20aria-hidden%3D%22true%22%3E%3Crect%20width%3D%2272%22%20height%3D%2272%22%20rx%3D%2216%22%20fill%3D%22%231d4ed8%22/%3E%3Cpath%20d%3D%22M22%2031%20L5%2039.5%20L5%2045%20L22%2040%20Z%22%20fill%3D%22%23fff%22/%3E%3Cpath%20d%3D%22M50%2031%20L67%2039.5%20L67%2045%20L50%2040%20Z%22%20fill%3D%22%23fff%22/%3E%3Crect%20x%3D%2222%22%20y%3D%2221%22%20width%3D%2228%22%20height%3D%2228%22%20rx%3D%224.5%22%20fill%3D%22%231d4ed8%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223.5%22/%3E%3Cpath%20d%3D%22M29.5%2021%20V14.5%20M42.5%2021%20V14.5%20M29.5%2049%20V55.5%20M42.5%2049%20V55.5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2236%22%20cy%3D%2235%22%20r%3D%225.5%22%20fill%3D%22%235eead4%22/%3E%3C/svg%3E">
+<style>
+/* ---- Design tokens: change the look here ------------------------------------------ */
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --ink: #161a1f;
+  --ink-2: #3a424c;
+  --muted: #69727d;
+  --line: #e2e5e9;
+  --line-2: #eef0f2;
+  --accent: #1d4ed8;
+
+  --decide: #1d4ed8;   --decide-bg: #e8effd;
+  --working: #0f766e;  --working-bg: #e2f4f2;
+  --waiting: #92600a;  --waiting-bg: #fbf1dc;
+  --done: #2e6b34;     --done-bg: #e6f2e7;
+  --problem: #b42318;  --problem-bg: #fdeceb;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .05);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--font); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--mono); font-size: .92em; }
+[hidden] { display: none !important; }
+
+/* ---- Top bar ------------------------------------------------------------------------ */
+.topbar { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 20px;
+  padding: 10px 24px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 17px; letter-spacing: -.015em; white-space: nowrap; }
+.brand__mark { display: flex; width: 30px; height: 30px; }
+.brand__mark svg { width: 100%; height: 100%; }
+.brand__sub { font-weight: 400; font-size: 15px; color: var(--muted); margin-left: 2px; }
+.tabs { display: flex; gap: 4px; }
+.tabs a { padding: 6px 12px; border-radius: 8px; color: var(--ink-2); font-weight: 600; font-size: 14px; }
+.tabs a:hover { background: var(--line-2); }
+.tabs a.on { background: var(--decide-bg); color: var(--decide); }
+.topbar__middle { flex: 1; display: flex; align-items: center; justify-content: center; gap: 12px; min-width: 0; }
+.topbar__right { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+.clock { color: var(--muted); }
+.mode { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--working); }
+
+.agent-strip { position: sticky; top: 51px; z-index: 9; display: flex; align-items: center; gap: 8px; padding: 8px 24px;
+  background: var(--working-bg); color: var(--working); border-bottom: 1px solid #bfe3de; font-size: 14px; }
+.agent-strip a { margin-left: auto; font-weight: 600; color: var(--working); text-decoration: underline; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.dot--pulse { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.8); } }
+
+.demo { display: flex; align-items: center; gap: 6px; padding-left: 14px; border-left: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.demo select { max-width: 170px; }
+.demo select, .demo button { font-size: 13px; padding: 4px 8px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); color: var(--ink-2); }
+.demo button:hover { border-color: var(--muted); }
+
+/* ---- Layout ------------------------------------------------------------------------- */
+main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+h1 { font-size: 24px; letter-spacing: -.02em; margin: 0; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 28px 0 10px; }
+
+/* ---- Status pills ------------------------------------------------------------------- */
+.status { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 14px; white-space: nowrap; }
+.tone-decide .status, .status.tone-decide { background: var(--decide-bg); color: var(--decide); }
+.tone-working .status, .status.tone-working { background: var(--working-bg); color: var(--working); }
+.tone-waiting .status, .status.tone-waiting { background: var(--waiting-bg); color: var(--waiting); }
+.tone-done .status, .status.tone-done { background: var(--line-2); color: var(--muted); }
+.tone-problem .status, .status.tone-problem { background: var(--problem-bg); color: var(--problem); }
+
+/* ---- Trips list ----------------------------------------------------------------------- */
+.list-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.filters { display: flex; align-items: center; gap: 10px; }
+.check-filter { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; color: var(--ink-2); cursor: pointer; user-select: none; }
+.check-filter input { width: 16px; height: 16px; accent-color: var(--accent); }
+.segmented { display: inline-flex; background: var(--line-2); border-radius: 8px; padding: 3px; }
+.segmented button { border: 0; background: transparent; padding: 6px 12px; border-radius: 6px; color: var(--ink-2); font-weight: 500; }
+.segmented button.on { background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font-weight: 600; }
+.filters select { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink-2); }
+
+.rows { display: flex; flex-direction: column; gap: 8px; }
+.row { display: grid; grid-template-columns: minmax(220px, 2.2fr) 1.1fr 1.3fr 1.2fr minmax(230px, 1.8fr);
+  align-items: center; gap: 16px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line);
+  border-left: 4px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); transition: border-color .15s; }
+.row:hover { border-color: #c9ced5; }
+.row.tone-decide { border-left-color: var(--decide); }
+.row.tone-working { border-left-color: var(--working); }
+.row.tone-problem { border-left-color: var(--problem); }
+.row.tone-waiting { border-left-color: var(--waiting); }
+.row--new { animation: arrive .6s ease-out; }
+@keyframes arrive { from { opacity: 0; transform: translateY(-8px); background: var(--working-bg); } to { opacity: 1; transform: none; } }
+.row__trip b { display: block; }
+.row__trip .muted { font-size: 13px; }
+.trip-id { display: inline-block; min-width: 30px; margin-right: 6px; padding: 0 6px; border-radius: 4px; background: var(--line-2); color: var(--ink-2); font: 600 12px/20px var(--mono); text-align: center; }
+.row__status { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.ticker { font-size: 13px; color: var(--working); }
+.ticker::after { content: "…"; }
+.flagline { font-size: 12px; color: var(--problem); }
+.empty { padding: 40px; text-align: center; background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); color: var(--muted); }
+.empty b { display: block; color: var(--ink); font-size: 17px; margin-bottom: 4px; }
+
+/* ---- Trip page ------------------------------------------------------------------------ */
+.back { color: var(--muted); font-size: 14px; }
+.back:hover { color: var(--ink); }
+.trip-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 8px 0 4px; flex-wrap: wrap; }
+.trip-meta { color: var(--ink-2); }
+.trip-meta span + span::before { content: "·"; margin: 0 8px; color: var(--muted); }
+
+.notice { margin: 16px 0; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 14px; }
+.notice--problem { background: var(--problem-bg); color: var(--problem); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 12px; }
+.card--decide { border-left: 4px solid var(--decide); }
+.card--problem { border-left: 4px solid var(--problem); }
+.card--working { border-left: 4px solid var(--working); }
+.card__head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; }
+.card__num { font: 600 13px var(--mono); color: var(--muted); }
+.card__title { font-size: 18px; font-weight: 650; letter-spacing: -.01em; }
+.card__from { margin-left: auto; color: var(--muted); font-size: 14px; white-space: nowrap; }
+.card__oneline { padding: 0 18px 14px 18px; color: var(--ink-2); font-size: 14px; }
+.card__body { padding: 4px 18px 18px; border-top: 1px solid var(--line-2); }
+.drafted-before { margin-top: 12px; font-size: 13px; color: var(--waiting); }
+
+.problems { margin: 12px 0 0; padding: 10px 14px; border-radius: var(--radius-sm); background: var(--problem-bg); color: var(--problem); font-size: 14px; }
+.problems ul { margin: 4px 0 0; padding-left: 18px; }
+
+.section-label { margin: 18px 0 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+details > summary { cursor: pointer; list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+.more { color: var(--accent); font-size: 14px; }
+.more::after { content: " ▸"; }
+details[open] > summary.more::after { content: " ▾"; }
+
+.email { margin-top: 12px; }
+.email blockquote { margin: 8px 0 0; padding: 10px 14px; border-left: 3px solid var(--line); background: var(--surface-2); white-space: pre-wrap; color: var(--ink-2); font-size: 14px; }
+.agent-note { margin-top: 12px; color: var(--ink-2); font-size: 14px; }
+
+.changes { width: 100%; border-collapse: collapse; }
+.changes td { padding: 6px 0; vertical-align: top; }
+.changes td:first-child { width: 190px; font-weight: 600; }
+.changes .before { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(0,0,0,.25); }
+.changes .arrow { padding: 0 10px; color: var(--muted); }
+.changes .after { font-weight: 650; }
+.changes .added { font-weight: 700; background: var(--decide-bg); border-radius: 3px; padding: 0 3px; }
+.svc-status { margin-top: 2px; font-size: 14px; }
+
+.facts { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline; margin-top: 12px; }
+.check-ok { color: var(--done); font-weight: 600; }
+.waived { color: var(--waiting); font-size: 14px; }
+.check-fail { color: var(--problem); font-weight: 600; }
+.money { font-weight: 650; }
+.check-table { width: 100%; margin-top: 8px; border-collapse: collapse; font-size: 13px; background: var(--surface-2); border-radius: var(--radius-sm); }
+.check-table td { padding: 7px 10px; vertical-align: top; border-top: 1px solid var(--line-2); color: var(--ink-2); }
+.check-table tr:first-child td { border-top: 0; }
+.check-table .ck-name { width: 150px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.check-table .ck-verdict { width: 120px; font-weight: 600; color: var(--done); white-space: nowrap; }
+.check-table tr.fail .ck-verdict, .check-table tr.fail .ck-name { color: var(--problem); }
+.check-list { margin: 8px 0 0; padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius-sm); font-size: 13px; white-space: pre-wrap; color: var(--ink-2); }
+
+.messages { border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+.msg { border-top: 1px solid var(--line-2); }
+.msg:first-child { border-top: 0; }
+.msg__row { display: grid; grid-template-columns: 22px 80px minmax(150px, 1.3fr) 2fr 18px; gap: 10px; align-items: center; padding: 9px 12px; cursor: pointer; }
+.msg__row:hover { background: var(--surface-2); }
+.msg.off .msg__row { opacity: .45; }
+.role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.msg__to { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg__preview { color: var(--muted); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.edited { margin-left: 6px; font-size: 11px; font-weight: 600; color: var(--waiting); text-transform: uppercase; }
+.msg__open { padding: 4px 12px 14px 44px; }
+.msg__open input, .msg__open textarea { width: 100%; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 10px; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); }
+.msg__open textarea { min-height: 170px; margin-top: 6px; resize: vertical; line-height: 1.5; }
+.msg__open .addr { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.option { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+.option__label { font: 700 13px var(--mono); color: var(--decide); }
+.option__desc { margin: 4px 0 8px; font-weight: 600; }
+.option .changes td:first-child { width: auto; padding-right: 8px; font-weight: 500; font-size: 13px; }
+.option .changes td { font-size: 13px; }
+
+.actions { display: flex; align-items: center; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.btn { padding: 9px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600; }
+.btn:hover { border-color: var(--muted); }
+.btn--primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn--primary:hover { filter: brightness(1.08); border-color: var(--accent); }
+.btn--danger { color: var(--problem); }
+.btn:disabled { opacity: .5; cursor: default; }
+.reject-form { margin-top: 14px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+.reject-form label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.reject-form textarea { width: 100%; min-height: 70px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; resize: vertical; }
+
+.trail { margin: 8px 0 0; padding: 0; list-style: none; font-size: 13px; }
+.trail li { padding: 4px 0 4px 18px; position: relative; color: var(--ink-2); }
+.trail li::before { content: ""; position: absolute; left: 4px; top: 11px; width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+.trail li.k-check::before { background: var(--done); }
+.trail li.k-fail::before { background: var(--problem); }
+.trail li.k-proposal::before { background: var(--decide); }
+.trail li.k-live::before { background: var(--working); animation: pulse 1.2s infinite; }
+
+.progress-line { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 8px; font-size: 14px; }
+.progress-card { margin-bottom: 8px; }
+.progress-card > summary.progress-line { margin-bottom: 0; cursor: pointer; }
+.progress-card[open] > summary.progress-line { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.progress-body { padding: 4px 16px 16px; background: var(--surface); border: 1px solid var(--line); border-top: 0; border-radius: 0 0 var(--radius) var(--radius); }
+.sent-note { margin: 6px 0 0; padding: 10px 14px; border-left: 3px solid var(--line); background: var(--surface-2); white-space: pre-wrap; color: var(--ink-2); font-size: 14px; }
+.progress-line .grow { flex: 1; color: var(--ink-2); }
+
+/* trip record */
+.leg-block { margin-bottom: 10px; padding-top: 14px; }
+.leg-head { display: grid; grid-template-columns: auto minmax(110px, 1fr) minmax(150px, 1.4fr) minmax(110px, 1fr) minmax(170px, 1.4fr); gap: 14px; align-items: baseline; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
+.leg-route { font-weight: 650; font-size: 16px; }
+.leg-time .muted, .leg-crew .muted { font-size: 12px; margin-right: 4px; }
+.leg-section { padding-top: 10px; font-size: 14px; }
+.leg-section .section-label { display: block; margin: 0 0 4px; }
+.record { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 4px 18px 18px; }
+.ref-link { color: var(--accent); }
+.ref-link:hover { text-decoration: underline; }
+.segmented a { padding: 6px 12px; border-radius: 6px; color: var(--ink-2); font-weight: 500; font-size: 14px; }
+.segmented a.on { background: var(--surface); box-shadow: var(--shadow); color: var(--ink); font-weight: 600; }
+.ref-entry { margin-bottom: 12px; scroll-margin-top: 72px; }
+.ref-entry.target, .ref-vendor.target { box-shadow: 0 0 0 2px var(--accent); }
+.ref-head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; padding-top: 14px; }
+.ref-name { font-weight: 650; font-size: 16px; }
+.ref-facts { color: var(--ink-2); font-size: 14px; }
+.ref-foot { padding-top: 12px; font-size: 14px; }
+.ref-person { display: grid; grid-template-columns: minmax(200px, 1fr) minmax(220px, 1.3fr) minmax(200px, 1.2fr); gap: 4px 14px; padding: 3px 0; }
+.ref-people { margin-top: 10px; font-size: 14px; }
+.ref-people summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+.ref-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.ref-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); }
+.ref-table td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+.ref-table tr.target td { background: var(--decide-bg); }
+.ref-photos { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 14px; }
+.ref-photo { margin: 0; width: min-content; font-size: 12px; color: var(--muted); }
+.ref-photo__img { position: relative; width: max-content; border-radius: var(--radius-sm); overflow: hidden; background: var(--line-2); }
+.ref-photo__img img { height: 210px; width: 420px; object-fit: cover; display: block; }   /* exteriors: all 2:1 */
+.ref-photo__img img.crop { width: 230px; object-fit: cover; }   /* cabin shots: portrait, cropped to a fixed box */
+.ref-photo figcaption { margin-top: 4px; }
+.ref-photo__none { height: 210px; display: flex; align-items: center; justify-content: center; width: 220px; padding: 12px; color: var(--muted); font-size: 13px; text-align: center; border: 1px dashed var(--line); }
+/* Blurs the stock photo's real registration (too small at this size to paint ours over it). */
+.tail-mask { position: absolute; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); background: rgba(235, 238, 242, .35); border-radius: 2px; }
+.ref-airport { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
+.ref-map { position: relative; overflow: hidden; border-radius: var(--radius-sm); border: 1px solid var(--line); margin-top: 14px; }
+.ref-map img { position: absolute; width: 256px; height: 256px; }
+.ref-pin { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--problem); border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+.ref-map__credit { position: absolute; right: 0; bottom: 0; padding: 1px 5px; font-size: 10px; background: rgba(255,255,255,.8); color: #333; }
+.ref-search { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); min-width: 260px; font: inherit; font-size: 14px; }
+.fav { font-size: 12px; font-weight: 600; color: var(--waiting); }
+.ref-vendor { margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface-2); font-size: 14px; scroll-margin-top: 72px; }
+/* ---- Schedule board ---- */
+.board-controls { flex-wrap: wrap; margin: 14px 0 6px; }
+.board-range { display: inline-flex; align-items: center; gap: 8px; }
+.board-range .btn { padding: 4px 10px; }
+.board-range .btn[disabled] { opacity: .4; cursor: default; }
+.board-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--decide-bg); color: var(--decide); font-weight: 600; font-size: 13px; }
+.board-chip button { border: 0; background: none; color: inherit; font-size: 15px; padding: 0; }
+.board-note { margin: 0 0 12px; font-size: 13px; }
+.board-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 13px; color: var(--muted); }
+.board-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.board-legend i { display: inline-block; width: 18px; height: 11px; border-radius: 3px; }
+.k-client { background: var(--decide-bg); border: 1px solid #b7c8f5; }
+.k-client-t { color: var(--decide); }
+.k-pos { background: var(--surface-2); border: 1px solid #c9ced6; }
+.k-pos-t { color: var(--ink-2); }
+.k-mx { background: var(--waiting-bg); border: 1px dashed #d9b46a; }
+.k-mx-t { color: var(--waiting); }
+.k-standby { background: transparent; border: 1.5px solid var(--working); }
+.k-standby-t { color: var(--working); }
+.k-prop { background: transparent; border: 1.5px dashed var(--decide); }
+.k-duty { background: var(--working-bg); }
+.k-now { width: 2px !important; border-radius: 0 !important; background: var(--problem); }
+.faded { opacity: .28; }
+.hl { box-shadow: 0 0 0 2px var(--accent); }
+.tl { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.tl-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); border-bottom: 1px solid var(--line-2); }
+.tl-row:last-child { border-bottom: 0; }
+.tl-label { padding: 22px 12px 0; font-size: 14px; }
+.tl-label small { display: block; color: var(--muted); font-size: 12px; }
+.tl-track { position: relative; height: 82px; }
+.tl-track.tall { height: 104px; }
+.tl-track.pilot { height: 100px; }
+.tl-track.tall.pilot { height: 124px; }
+.tl-head .tl-track { height: 40px; }
+.tl-day { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--line); }
+.tl-tick { position: absolute; top: 0; bottom: 0; border-left: 1px dotted var(--line); }
+.tl-dl { position: absolute; top: 5px; font-weight: 600; font-size: 13px; }
+.tl-hl { position: absolute; top: 22px; font-size: 11px; color: var(--muted); transform: translateX(-50%); }
+.tl-bar { position: absolute; top: 31px; height: 20px; border-radius: 4px; min-width: 6px; z-index: 1; }
+a.tl-bar:hover { filter: brightness(.95); box-shadow: 0 0 0 2px var(--accent); }
+.tl-bar.k-prop { top: 58px; }
+.tl-in { position: absolute; top: 33px; padding-left: 6px; font-size: 12px; line-height: 16px; white-space: nowrap; pointer-events: none; z-index: 2; }
+.tl-cap { position: absolute; font-size: 12px; line-height: 14px; white-space: nowrap; color: var(--ink-2); }
+.tl-cap.up { top: 13px; }
+.tl-cap.dn { top: 55px; }
+.tl-track.pilot .tl-cap { z-index: 2; }
+.tl-cap.prop { top: 61px; color: var(--decide); font-weight: 600; }
+.tl-duty { position: absolute; top: 26px; bottom: 6px; background: var(--working-bg); border-radius: 4px; }
+.tl-duty span { position: absolute; left: 6px; bottom: 4px; font-size: 11px; color: var(--working); white-space: nowrap; }
+.tl-now { position: absolute; top: 0; bottom: 0; border-left: 2px solid var(--problem); z-index: 3; }
+.wk { display: grid; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.wk-h { padding: 8px 6px; font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; border-bottom: 1px solid var(--line); }
+.wk-h.today { color: var(--decide); }
+.wk-h small { display: block; font-weight: 500; }
+.wk-row { padding: 10px 12px; font-size: 14px; border-bottom: 1px solid var(--line-2); }
+.wk-row small { display: block; color: var(--muted); font-size: 12px; }
+.wk-c { display: flex; flex-direction: column; gap: 4px; padding: 6px 4px; border-left: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); min-height: 70px; }
+.wk-c.today { background: var(--surface-2); }
+.wk-chip { display: block; padding: 3px 6px; border-radius: 4px; font-size: 12px; line-height: 1.3; color: var(--ink-2); }
+.wk-chip b { font-weight: 600; }
+a.wk-chip:hover { box-shadow: 0 0 0 2px var(--accent); }
+.wk-duty { margin-top: auto; font-size: 11px; color: var(--working); }
+.board-day { margin-bottom: 10px; padding-top: 4px; }
+.board-li { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line-2); font-size: 14px; }
+.board-li:last-child { border-bottom: 0; }
+.note-form { margin: 0 0 16px; padding-bottom: 16px; }
+.note-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
+.note-row select { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font: inherit; font-size: 14px; }
+.note-form textarea { width: 100%; min-height: 76px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; resize: vertical; }
+.legs { width: 100%; border-collapse: collapse; }
+.legs th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); padding: 8px 10px 6px 0; border-bottom: 1px solid var(--line); }
+.legs td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+.legs tr:last-child td { border-bottom: 0; }
+.proposed { display: block; margin-top: 2px; color: var(--decide); font-weight: 600; font-size: 13px; }
+.kv { display: grid; grid-template-columns: 160px 1fr; gap: 6px 16px; font-size: 14px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+.svc { display: grid; grid-template-columns: 14px 150px 1fr auto; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line-2); font-size: 14px; }
+.svc:last-child { border-bottom: 0; }
+.svc__dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.svc__dot.confirmed { background: var(--done); }
+.svc__dot.requested { background: var(--waiting); }
+.svc__dot.unavailable { background: var(--problem); }
+.svc__status { font-size: 13px; font-weight: 600; }
+.svc__status.confirmed { color: var(--done); }
+.svc__status.requested { color: var(--waiting); }
+.svc__status.unavailable { color: var(--problem); }
+.hist { padding: 8px 0; border-bottom: 1px solid var(--line-2); font-size: 14px; }
+.hist:last-child { border-bottom: 0; }
+.sent-list { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--ink-2); }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 10px 18px; border-radius: 8px; background: var(--ink); color: #fff; font-weight: 600; box-shadow: 0 6px 20px rgba(0,0,0,.2); opacity: 0; transition: opacity .2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+
+/* ---- Sample mode (the exported submission file) ----------------------------------------- */
+.sample-banner { padding: 8px 24px; background: var(--waiting-bg); color: var(--waiting); font-size: 13px; font-weight: 600; text-align: center; }
+#static-snapshot { max-width: 1180px; margin: 0 auto; padding: 24px; }
+.static-screen { margin-bottom: 48px; }
+.static-title { font-size: 18px; text-transform: none; letter-spacing: 0; color: var(--ink); margin: 0 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+
+/* ---- Evals page ------------------------------------------------------------------------- */
+.evals-intro { color: var(--ink-2); max-width: 820px; margin: 6px 0 16px; }
+.summary-strip { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: baseline; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.summary-strip .big { font-size: 20px; font-weight: 700; }
+.summary-strip .big.ok { color: var(--done); }
+.summary-strip .big.bad { color: var(--problem); }
+.evals-actions { display: flex; gap: 10px; margin: 14px 0 0; }
+.stories { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 10px; }
+.story { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); font-size: 14px; }
+.story h3 { margin: 0 0 8px; font-size: 15px; }
+.story dl { display: grid; grid-template-columns: 62px 1fr; gap: 6px 10px; margin: 0; }
+.story dt { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding-top: 2px; }
+.story dd { margin: 0; color: var(--ink-2); }
+.stories-note { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+.eval-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); font-size: 14px; }
+.eval-table th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.eval-table td { padding: 12px; vertical-align: top; border-bottom: 1px solid var(--line-2); }
+.eval-table tr.case-row { cursor: pointer; }
+.eval-table tr.case-row:hover td { background: var(--surface-2); }
+.eval-table tr.detail td { background: var(--surface-2); padding: 4px 16px 16px; }
+.case-title { font-weight: 600; }
+.case-type { font-size: 12px; color: var(--muted); }
+.verdict-ok { color: var(--done); font-weight: 700; white-space: nowrap; }
+.verdict-bad { color: var(--problem); font-weight: 700; white-space: nowrap; }
+.live-run { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); font-size: 13px; }
+.live-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--working); }
+.verdict-cell select, .verdict-cell textarea { width: 100%; font: inherit; font-size: 13px; padding: 5px 7px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.verdict-cell textarea { margin-top: 6px; min-height: 52px; resize: vertical; }
+.btn--small { padding: 5px 10px; font-size: 13px; }
+.assert-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px; }
+.assert-table td { padding: 5px 8px; border-top: 1px solid var(--line-2); vertical-align: top; }
+.assert-table tr.fail td { color: var(--problem); }
+
+/* ---- Trip chat panel ------------------------------------------------------------------------ */
+.chat-panel { position: fixed; top: 51px; right: 0; bottom: 0; width: 400px; z-index: 9; display: flex; flex-direction: column; background: var(--surface); border-left: 1px solid var(--line); box-shadow: -6px 0 20px rgba(16,24,40,.06); }
+body.chat-open main { margin-right: 400px; }
+.chat-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.chat-head b { font-size: 15px; }
+.chat-head .muted { font-size: 12px; display: block; font-weight: 400; }
+.chat-close { border: 0; background: none; font-size: 20px; color: var(--muted); }
+.chat-body { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.chat-q { align-self: flex-end; max-width: 85%; padding: 8px 12px; border-radius: 12px 12px 2px 12px; background: var(--decide-bg); color: var(--ink); }
+.chat-a { align-self: flex-start; max-width: 92%; padding: 8px 12px; border-radius: 12px 12px 12px 2px; background: var(--surface-2); border: 1px solid var(--line-2); white-space: pre-wrap; }
+.chat-a .used { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
+.chat-suggest { margin-top: 8px; padding: 10px; border: 1px dashed var(--decide); border-radius: 8px; background: var(--surface); white-space: normal; }
+.chat-suggest p { margin: 0 0 8px; }
+.chat-starters { display: flex; flex-direction: column; gap: 6px; }
+.chat-starters button { text-align: left; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink-2); font-size: 13px; }
+.chat-starters button:hover { border-color: var(--decide); color: var(--decide); }
+.chat-form { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--line); }
+.chat-form textarea { flex: 1; min-height: 40px; max-height: 120px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; resize: vertical; }
+.ask-why { margin-left: 6px; font-size: 12px; font-weight: 600; color: var(--accent); cursor: pointer; white-space: nowrap; }
+.trip-head .btn { flex: none; }
+@media (max-width: 1440px) { .brand__sub { display: none; } }
+@media (max-width: 900px) {
+  .row { grid-template-columns: 1fr 1fr; }
+  .row__status { grid-column: 1 / -1; }
+  .demo { display: none; }
+  .msg__row { grid-template-columns: 22px 1fr 18px; }
+  .msg__row .role, .msg__row .msg__preview { display: none; }
+  .ref-airport, .ref-person { grid-template-columns: 1fr; }
+  .ref-person { padding: 6px 0; }
+  .ref-people { overflow-x: auto; }
+  .ref-table { min-width: 640px; }   /* scrolls inside its box rather than squeezing */
+  .ref-photo__img img, .ref-photo__none { height: 150px; width: 300px; }
+  .ref-photo__img img.crop { width: 170px; }
+  .ref-search { min-width: 0; flex: 1; }
+}
+@media (max-width: 600px) {
+  .topbar { gap: 10px; padding: 10px 16px; }
+  .brand { font-size: 0; gap: 0; }   /* the mark alone, so all three tabs fit */
+  .tabs a { padding: 6px 8px; }
+  .filters { flex-wrap: wrap; }
+  .topbar__right { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#/"><span class="brand__mark"><svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="72" height="72" rx="16" fill="#1d4ed8"/><path d="M22 31 L5 39.5 L5 45 L22 40 Z" fill="#fff"/><path d="M50 31 L67 39.5 L67 45 L50 40 Z" fill="#fff"/><rect x="22" y="21" width="28" height="28" rx="4.5" fill="#1d4ed8" stroke="#fff" stroke-width="3.5"/><path d="M29.5 21 V14.5 M42.5 21 V14.5 M29.5 49 V55.5 M42.5 49 V55.5" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="35" r="5.5" fill="#5eead4"/></svg></span>AgentFlight<span class="brand__sub">Larkhaven Air · Trip operations</span></a>
+  <nav class="tabs"><a href="#/" id="tabTrips">Trips</a><a href="#/schedule" id="tabSchedule">Schedule</a><a href="#/reference" id="tabReference">Reference</a><a href="#/evals" id="tabEvals">Evals</a></nav>
+  <div class="topbar__middle"></div>
+  <div class="topbar__right">
+    <span id="clock" class="clock num"></span>
+    <span id="mode" class="mode"></span>
+  </div>
+  <div class="demo" id="demo">
+    Demo
+    <select id="demoMessage" aria-label="Scripted email"></select>
+    <button id="deliver">Deliver</button>
+    <button id="reset">Reset</button>
+  </div>
+</header>
+<div id="agentStrip" class="agent-strip" role="status" hidden></div>
+<main id="view"></main>
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+"use strict";
+
+/* ---- Data access: the only place the page gets data -----------------------------------
+   Live mode calls the local FastAPI app. Sample mode (the exported submission file)
+   reads a recorded session embedded in the page instead; the screens are the same. */
+const SAMPLE = (() => { const el = document.getElementById("sample-data"); return el ? JSON.parse(el.textContent) : null; })();
+
+const liveApi = {
+  overview: () => getJson("/api/overview"),
+  trip: (id) => getJson(`/api/trips/${encodeURIComponent(id)}`),
+  change: (id) => getJson(`/api/changes/${encodeURIComponent(id)}`),
+  reference: () => getJson("/api/reference"),
+  schedule: () => getJson("/api/schedule"),
+  inbox: () => getJson("/api/inbox"),
+  deliver: (id) => postJson(`/api/inbox/${encodeURIComponent(id)}/deliver`, {}),
+  noteContacts: () => getJson("/api/notes/contacts"),
+  logNote: (sender, channel, text) => postJson("/api/notes", { sender, channel, text }),
+  approve: (changeId, decisions) => postJson(`/api/changes/${changeId}/approve`, { decisions }),
+  reject: (changeId, note) => postJson(`/api/changes/${changeId}/reject`, { note }),
+  revise: (changeId, instructions) => postJson(`/api/changes/${changeId}/revise`, { instructions }),
+  chat: (tripId, question, history) => postJson(`/api/trips/${encodeURIComponent(tripId)}/chat`, { question, history }),
+  reset: () => postJson("/api/reset", {}),
+  evals: () => getJson("/api/evals"),
+  saveVerdict: (caseId, verdict, note) => postJson(`/api/evals/${encodeURIComponent(caseId)}/verdict`, { verdict, note }),
+  runEval: (caseId) => postJson(`/api/evals/${encodeURIComponent(caseId)}/run`, {}),
+  runAllEvals: () => postJson("/api/evals/run-all", {}),
+  subscribe(onEvent) {
+    const source = new EventSource("/api/events");
+    source.onmessage = (e) => onEvent(JSON.parse(e.data));
+    return source;
+  },
+};
+
+/* Sample mode: replays the recorded demo session. Stages run base → demo-1 ready →
+   demo-1 approved → demo-2 ready → demo-2 approved → demo-3 ready → demo-3 approved; delivering an email replays the
+   recorded agent run with its real timing, and approving applies the recorded decision.
+   One side branch: from demo-2 ready, rejecting with the recorded instruction replays the
+   agent's revision (→ revision ready → revision approved). */
+function sampleApi(data) {
+  const RECORDED_ONLY = "Sample mode replays recorded runs of the real agent. This action works in the live app (see the video).";
+  let stage = 0;
+  let current = structuredClone(data.stages[0].snapshot);
+  let listener = null;
+  let timers = [];
+  const setStage = (index) => { stage = index; current = structuredClone(data.stages[index].snapshot); };
+  const stop = () => { timers.forEach(clearTimeout); timers = []; };
+  // Play a recorded agent run with its real step timing, then land on the stage it led to.
+  const replay = (frames, nextStage) => {
+    for (const frame of frames) {
+      timers.push(setTimeout(() => {
+        current.overview = frame.overview;
+        if (frame.trip_view) current.trips[frame.trip] = frame.trip_view;
+        if (listener) listener(frame.event);
+      }, frame.t * 1000));
+    }
+    const last = frames[frames.length - 1].t;
+    timers.push(setTimeout(() => { timers = []; setStage(nextStage); if (listener) listener({ type: "changed" }); }, last * 1000 + 50));
+  };
+
+  window.__sample = {   // used by the export to capture screens
+    show(stageName, hash) { stop(); setStage(data.stages.findIndex((st) => st.name === stageName)); location.hash = hash; return route(); },
+  };
+
+  return {
+    sample: true,
+    overview: async () => current.overview,
+    trip: async (id) => { if (!current.trips[id]) throw new Error(`No trip ${id}`); return current.trips[id]; },
+    change: async (id) => { if (!current.changes[id]) throw new Error(`No change ${id}`); return current.changes[id]; },
+    reference: async () => data.reference || current.reference,   // stored once (it never changes)
+    schedule: async () => current.board,
+    inbox: async () => data.inbox,
+    async deliver(messageId) {
+      if (timers.length) throw new Error("The recorded run is still playing.");
+      if (stage % 2 === 1) throw new Error("Approve the waiting package first (the recorded order).");
+      const play = data.plays[stage / 2];
+      if (!play) throw new Error("All the recorded emails have been delivered. Press Reset to replay.");
+      if (play.message !== messageId) throw new Error(`In sample mode, deliver ${play.message} next (the recorded order).`);
+      replay(play.frames, stage + 1);
+      return { change: play.change };
+    },
+    async approve(changeId, decisions) {
+      const next = data.stages[stage + 1];
+      if (!next || next.approved !== changeId) throw new Error(RECORDED_ONLY);
+      if (Object.keys(decisions || {}).length) throw new Error("Sample mode can only replay the recorded decision: approve everything as drafted.");
+      setStage(stage + 1);
+      return { executed: true, problems: [], sent: next.sent };
+    },
+    reject: async () => { throw new Error(RECORDED_ONLY); },
+    noteContacts: async () => (data.reference || current.reference).clients.flatMap((c) =>
+      c.people.filter((p) => p.email).map((p) => ({ email: p.email, name: p.name, group: c.company }))),
+    logNote: async () => { throw new Error("Sample mode replays recorded runs. Logging a call or text works in the live app."); },
+    // One recorded revision: rejecting demo change 2's options with the recorded instruction.
+    suggestedRevision: (changeId) => (data.revision && data.revision.change === changeId ? data.revision.instructions : ""),
+    async revise(changeId, instructions) {
+      const rev = data.revision;
+      if (!rev || rev.change !== changeId || data.stages[stage].name !== "demo-2 ready") throw new Error(RECORDED_ONLY);
+      if (timers.length) throw new Error("The recorded run is still playing.");
+      if (instructions.trim() !== rev.instructions) throw new Error("Sample mode replays the recorded revision, so use the instruction it fills in. Any instruction works in the live app.");
+      replay(rev.frames, data.stages.findIndex((st) => st.name === "revision ready"));
+      return { change: rev.revised };
+    },
+    async reset() { stop(); setStage(0); if (listener) listener({ type: "reset" }); return { ok: true }; },
+    evals: async () => data.evals,
+    saveVerdict: async () => { throw new Error("Sample mode shows the recorded verdicts."); },
+    runEval: async () => { throw new Error("Sample mode shows the recorded milestone run; cases run live in the local app."); },
+    runAllEvals: async () => { throw new Error("Sample mode shows the recorded milestone run; cases run live in the local app."); },
+    subscribe(onEvent) { listener = onEvent; },
+    // The chat in sample mode: recorded questions and the chat's real recorded answers.
+    chatQuestions: (tripId) => (data.chat || []).filter((qa) => qa.trip === tripId).map((qa) => qa.question),
+    async chat(tripId, question) {
+      const qa = (data.chat || []).find((r) => r.trip === tripId && r.question === question);
+      if (!qa) throw new Error("In sample mode, the chat shows recorded answers to the questions listed. Live chat runs in the local app.");
+      await new Promise((r) => setTimeout(r, 900));
+      return { ...qa.result, suggestion: null };   // a recorded suggestion can't be applied in sample mode
+    },
+  };
+}
+
+const api = SAMPLE ? sampleApi(SAMPLE) : liveApi;
+// JavaScript runs, so the live app replaces the captured screens. Remove them (not just hide them):
+// they repeat the app's element ids, and the app's controls must find their own.
+document.getElementById("static-snapshot")?.remove();
+
+async function getJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error((await response.json()).detail || response.statusText);
+  return response.json();
+}
+async function postJson(url, body) {
+  const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  if (!response.ok) throw new Error((await response.json()).detail || response.statusText);
+  return response.json();
+}
+
+/* ---- Small helpers ------------------------------------------------------------------------ */
+const $ = (id) => document.getElementById(id);
+const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (n) => "$" + Number(n || 0).toLocaleString("en-US");
+const shortTime = (iso) => iso ? `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))} ${iso.slice(11, 16)}` : "";
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+const plainText = (text) => String(text ?? "").replace(/\*\*(.+?)\*\*/g, "$1").replace(/^\s*[-*]\s+/gm, "• ");
+const store = {
+  get(key, fallback) { try { const v = localStorage.getItem("af." + key); return v === null ? fallback : JSON.parse(v); } catch { return fallback; } },
+  set(key, value) { try { localStorage.setItem("af." + key, JSON.stringify(value)); } catch { /* storage unavailable: fine */ } },
+};
+function toast(text) {
+  const el = $("toast");
+  el.textContent = text;
+  el.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove("show"), 2600);
+}
+
+/* ---- What the person has done on the page (survives live re-renders) ---------------------- */
+const ui = {
+  attentionOnly: store.get("attentionOnlyFilter", false),   // default: show all trips
+  window: store.get("window", "14"),
+  seenRows: null,                // row keys already shown, to animate arrivals
+  open: {},                      // change id -> expanded?
+  msgOpen: {},                   // "chg/item" -> expanded?
+  msgOff: {},                    // "chg/item" -> unticked (won't be sent)
+  edits: {},                     // "chg/item" -> {subject, body}
+  rejecting: {},                 // change id -> reject form shown
+  prefill: {},                   // change id -> text the revise box opens with (from Waive)
+  liveSteps: {},                 // change id -> [step texts] while the agent works
+};
+
+/* ---- Header -------------------------------------------------------------------------------- */
+function renderHeader(overview) {
+  $("clock").textContent = overview.now_label;
+  $("mode").textContent = overview.mode === "live" ? "Live" : "Sample mode: recorded runs";
+  // The agent's status gets its own strip under the top bar, so it is never squeezed out.
+  const strip = $("agentStrip");
+  const working = overview.processing;
+  if (working.length) {
+    const first = working[0];
+    const who = first.trip ? `Trip ${first.trip}` : `${plural(working.length, "new message")}`;
+    const here = first.trip && location.hash === `#/trips/${first.trip}`;
+    strip.innerHTML = `<span class="dot dot--pulse"></span><b>Agent working</b> · ${esc(who)} · ${esc(first.step || "Reading the email")}…
+      ${first.trip && !here ? `<a href="#/trips/${encodeURIComponent(first.trip)}">Watch it work →</a>` : ""}`;
+    strip.hidden = false;
+  } else {
+    strip.hidden = true;
+  }
+}
+
+/* ---- Trips list (home, the work queue) ------------------------------------------------------ */
+const WINDOWS = [["3", "Next 3 days"], ["7", "Next 7 days"], ["14", "Next 14 days"], ["30", "Next 30 days"], ["all", "All upcoming"], ["completed", "Include completed"]];
+
+function visible(row) {
+  if (ui.attentionOnly && !row.attention) return false;
+  if (row.kind !== "trip") return true;
+  if (row.completed) return ui.window === "completed";
+  if (ui.window === "all" || ui.window === "completed") return true;
+  return row.hours_to_departure <= Number(ui.window) * 24;
+}
+
+async function renderTrips() {
+  const overview = await api.overview();
+  renderHeader(overview);
+  const rows = overview.rows.filter(visible);
+  const keys = rows.map((r) => r.trip || r.change);
+  const fresh = ui.seenRows ? new Set(keys.filter((k) => !ui.seenRows.has(k))) : new Set();
+  ui.seenRows = new Set(keys);
+  const waitingElsewhere = overview.rows.filter((r) => !r.attention && r.status.startsWith("Waiting")).length;
+
+  $("view").innerHTML = `
+    <div class="list-head">
+      <h1>Trips</h1>
+      <div class="filters">
+        <button class="btn" id="noteOpen">Log a call or text</button>
+        <label class="check-filter"><input type="checkbox" id="attentionOnly" ${ui.attentionOnly ? "checked" : ""}>
+          Show only trips that need my attention (${overview.attention_count})</label>
+        <select id="window" aria-label="Departure window">
+          ${WINDOWS.map(([v, l]) => `<option value="${v}" ${v === ui.window ? "selected" : ""}>${l}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    ${ui.note ? noteForm() : ""}
+    ${rows.length ? `<div class="rows">${rows.map((r) => tripRow(r, fresh.has(r.trip || r.change))).join("")}</div>`
+      : ui.attentionOnly
+        ? `<div class="empty"><b>Nothing needs you right now.</b>${waitingElsewhere ? `${plural(waitingElsewhere, "trip")} waiting on others.` : "All trips are on track."}</div>`
+        : `<div class="empty"><b>No trips in this window.</b>Choose a longer departure window.</div>`}`;
+
+  $("attentionOnly").onchange = (e) => {
+    ui.attentionOnly = e.target.checked; store.set("attentionOnlyFilter", ui.attentionOnly); renderTrips();
+  };
+  $("window").onchange = (e) => { ui.window = e.target.value; store.set("window", ui.window); renderTrips(); };
+  $("noteOpen").onclick = async () => {
+    try { ui.note = { contacts: await api.noteContacts(), channel: "call" }; } catch (error) { toast(error.message); return; }
+    await renderTrips();
+    $("noteText").focus();
+  };
+  if (ui.note) wireNoteForm();
+}
+
+/* A phone call or text the trip manager logs: it goes to the agent through the same intake as an email. */
+function noteForm() {
+  const n = ui.note, groups = [...new Set(n.contacts.map((c) => c.group))];
+  return `<div class="record note-form">
+    <div class="section-label" style="margin-top:12px">Log a call or text</div>
+    <div class="note-row">
+      <div class="segmented"><button data-channel="call" class="${n.channel === "call" ? "on" : ""}">Phone call</button><button data-channel="text" class="${n.channel === "text" ? "on" : ""}">Text message</button></div>
+      <select id="noteFrom" aria-label="Who it's from"><option value="">Who it's from…</option>
+        ${groups.map((g) => `<optgroup label="${esc(g)}">${n.contacts.filter((c) => c.group === g).map((c) => `<option value="${esc(c.email)}"${c.email === n.sender ? " selected" : ""}>${esc(c.name)}</option>`).join("")}</optgroup>`).join("")}
+      </select>
+    </div>
+    <textarea id="noteText" placeholder="e.g. Morgan called: they'd like to add one more passenger to Thursday, Lena Ford. Names to follow by email.">${esc(n.text || "")}</textarea>
+    <p class="muted" style="font-size:13px;margin:6px 0 0">The agent treats it like an email from that person: it checks, drafts, and waits for your approval. Nothing is sent.</p>
+    <div class="actions" style="margin-top:10px"><button class="btn btn--primary" id="noteSend">Send to the agent</button><button class="btn" id="noteCancel">Cancel</button></div>
+  </div>`;
+}
+
+function wireNoteForm() {
+  const keep = () => Object.assign(ui.note, { sender: $("noteFrom").value, text: $("noteText").value });
+  document.querySelectorAll("[data-channel]").forEach((b) => b.onclick = () => { keep(); ui.note.channel = b.dataset.channel; renderTrips(); });
+  $("noteCancel").onclick = () => { ui.note = null; renderTrips(); };
+  $("noteSend").onclick = async () => {
+    keep();
+    if (!ui.note.sender) { toast("Choose who it's from."); return; }
+    if (!ui.note.text.trim()) { toast("Write what was said."); $("noteText").focus(); return; }
+    $("noteSend").disabled = true;
+    try {
+      await api.logNote(ui.note.sender, ui.note.channel, ui.note.text);
+      ui.note = null;
+      toast("Sent to the agent. Nothing goes out without your approval.");
+    } catch (error) { toast(error.message); }
+    renderTrips();
+  };
+}
+
+function tripRow(r, isNew) {
+  const href = r.kind === "trip" ? `#/trips/${r.trip}` : `#/changes/${r.change}`;
+  const working = r.tone === "working";
+  return `
+    <a class="row tone-${r.tone} ${isNew ? "row--new" : ""}" href="${href}">
+      <div class="row__trip">
+        <b>${r.trip ? `<span class="trip-id">${esc(r.trip)}</span>` : ""}${esc(r.client)}</b>
+        <span class="muted">${esc(r.title)}</span>
+      </div>
+      <div class="mono">${esc(r.route)}</div>
+      <div class="num">${esc(r.departure_label)}<div class="muted" style="font-size:13px">${esc(r.countdown)}</div></div>
+      <div class="muted" style="font-size:14px">${esc(r.aircraft)}</div>
+      <div class="row__status">
+        <span class="status">${working ? '<span class="dot dot--pulse"></span>' : ""}${esc(r.status)}</span>
+        ${working && r.step ? `<span class="ticker">${esc(r.step)}</span>` : ""}
+        ${r.flags.map((f) => `<span class="flagline">${esc(f)}</span>`).join("")}
+      </div>
+    </a>`;
+}
+
+/* ---- Trip page -------------------------------------------------------------------------------- */
+async function renderTrip(tripId) {
+  const [overview, trip] = await Promise.all([api.overview(), api.trip(tripId)]);
+  renderHeader(overview);
+  const decisions = trip.decisions;
+  if (decisions.length && !decisions.some((c) => ui.open[c.id] !== undefined)) ui.open[decisions[0].id] = true;
+
+  $("view").innerHTML = `
+    <a class="back" href="#/">← Trips</a>
+    <div class="trip-head">
+      <h1><span class="trip-id">${esc(trip.trip)}</span>${esc(trip.client)} · ${esc(trip.title)}</h1>
+      <button class="btn" data-chat-open>Ask about this trip</button>
+    </div>
+    <div class="trip-meta num"><span>${esc(trip.departure_label)}</span><span>departs ${esc(trip.countdown)}</span><span>${refLink("aircraft", trip.aircraft.tail, trip.aircraft.tail)} ${esc(trip.aircraft.type)}</span><span>Crew ${tripCrews(trip).map(pilotLinks).join(", ")}</span><span>Client ${refLink("clients", trip.client_id, trip.client)}</span></div>
+    ${trip.flags.map((f) => `<div class="notice notice--problem">${esc(f)}</div>`).join("")}
+
+    ${decisions.length ? `<h2>Needs your decision (${decisions.length})</h2>${decisions.map(decisionCard).join("")}` : ""}
+    ${trip.in_progress.length ? `<h2>In progress</h2>${trip.in_progress.map(progressItem).join("")}` : ""}
+
+    <h2>Legs</h2>
+    ${trip.legs.map((l) => legBlock({ ...l, client_id: trip.client_id })).join("")}
+    <h2>Charges</h2>
+    <div class="record" style="padding-top:12px;font-size:14px">${trip.charges.length ? trip.charges.map((c) => `<div class="hist"><span class="money">${money(c.amount)}</span> <span class="muted">· ${esc(c.change)}</span>${(c.waived || []).length ? ` <span class="waived">· ${esc(c.waived.map((w) => w.charge.replaceAll("_", " ")).join(", "))} waived by trip manager</span>` : ""}</div>`).join("") : '<span class="muted">No charges on this trip.</span>'}</div>
+    <h2>History</h2>
+    <div class="record" style="padding-top:8px">${trip.history.length ? trip.history.map(historyItem).join("") : '<div class="hist muted">No completed changes yet.</div>'}</div>`;
+
+  wire(trip, () => renderTrip(trip.trip));
+}
+
+/* One block per leg: when and who, then that leg's passengers and services. */
+function legBlock(l) {
+  const proposedDep = l.proposed.map((p) => `<span class="proposed">→ ${esc(p.departure.slice(11))} (proposed in ${p.number})</span>`).join("");
+  const proposedArr = l.proposed.map((p) => `<span class="proposed">→ ${esc(p.arrival.slice(11))}</span>`).join("");
+  return `<div class="record leg-block">
+    <div class="leg-head">
+      <span class="trip-id">${esc(l.leg)}</span>
+      <span class="leg-route">${refLink("airports", l.origin, l.origin)} → ${refLink("airports", l.destination, l.destination)}</span>
+      <span class="leg-time num"><span class="muted">Departs</span> ${esc(l.departure_label)}${proposedDep}</span>
+      <span class="leg-time num"><span class="muted">Arrives</span> ${esc(l.arrival_time)}${proposedArr}</span>
+      <span class="leg-crew"><span class="muted">Crew</span> ${pilotLinks(l.crew)} · ${refLink("aircraft", l.aircraft.tail, l.aircraft.tail)}</span>
+    </div>
+    <div class="leg-section"><span class="section-label">Passengers (${l.passenger_count})</span><div>${l.passengers.map((p) => refLink("clients", personId(p), p)).join(", ")}</div></div>
+    <div class="leg-section"><span class="section-label">Services</span>${l.services.length ? l.services.map(serviceRow).join("") : '<div class="muted">None booked.</div>'}</div>
+  </div>`;
+}
+
+function serviceRow(s) {
+  const status = s.status === "requested" ? "awaiting confirmation" : s.status;
+  return `<div class="svc"><span class="svc__dot ${esc(s.status)}"></span>
+    <span><b>${esc(s.type.replace("_", " "))}</b> <span class="muted">${esc(s.airport)}</span></span>
+    <span>${refLink("airports", s.vendor, s.vendor_name)}${s.how === "arranged_by_fbo" ? ' <span class="muted">(arranged by FBO)</span>' : ""}<div class="muted" style="font-size:13px">${esc(s.details)}${s.also_legs && s.also_legs.length ? ` · also covers ${esc(s.also_legs.join(", "))}` : ""}</div></span>
+    <span class="svc__status ${esc(s.status)}">${esc(status)}</span></div>`;
+}
+
+function decisionCard(c) {
+  const open = !!ui.open[c.id];
+  const problem = c.status === "Needs review";
+  const messages = c.items.filter((i) => i.kind === "message" && i.decision === null);
+  const oneLine = c.changes.length ? c.changes.map((x) => `${x.what}: ${x.after}`).join(" · ")
+    : c.options.length ? `${plural(c.options.length, "option")} for the client` : c.summary;
+  return `
+    <section class="card ${problem ? "card--problem" : "card--decide"}" data-change="${c.id}">
+      <div class="card__head" data-toggle="${c.id}">
+        <span class="card__num">${c.number}</span>
+        <span class="status tone-${c.tone}">${esc(c.status)}${c.reason ? ` · ${esc(c.reason)}` : ""}</span>
+        <span class="card__from">From ${esc(c.from_name || c.email.from || "")} · ${esc(shortTime(c.created))}</span>
+      </div>
+      ${open ? `<div class="card__body">
+        ${c.drafted_before.length ? `<div class="drafted-before">Drafted before ${esc(c.drafted_before.join(" and "))} was decided. Approving re-checks it against the trip as it is then.</div>` : ""}
+        ${c.problems.length ? `<div class="problems"><b>Problems found by the system's own checks</b><ul>${c.problems.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div>` : ""}
+        ${c.flags.map((f) => `<div class="problems"><b>Flagged · ${esc(f.category)}</b><br>${esc(f.reason)}</div>`).join("")}
+        ${emailBlock(c)}
+        ${c.changes.length ? `<div class="section-label">What changes</div>${changesTable(c.changes)}` : ""}
+        ${c.changes.length || c.fees.length ? `<div class="facts">${checkVerdict(c.checks)}${charges(c.fees, c.fee_total, c.status === "Needs approval" ? c.id : null)}</div>` : ""}
+        ${c.options.length ? `<div class="section-label">Options for the client</div><div class="options">${c.options.map(optionCard).join("")}</div>` : ""}
+        ${messages.length ? `<div class="section-label">Messages to send (${messages.length})</div><div class="messages">${messages.map((m) => messageRow(c.id, m)).join("")}</div>` : ""}
+        ${agentTrail(c)}
+        ${c.status === "Needs approval" ? actions(c, messages) : ""}
+      </div>` : `<div class="card__oneline">${esc(oneLine)}</div>`}
+    </section>`;
+}
+
+function emailBlock(c) {
+  return `<details class="email"><summary class="more">${esc(c.request.label)}</summary>
+    <blockquote>${esc(c.request.text || "")}</blockquote></details>
+    <details class="agent-note" ${c.options.length || !c.changes.length ? "open" : ""}><summary class="more">Agent's summary</summary><p style="margin:6px 0 0">${esc(c.summary)}</p></details>`;
+}
+
+function changesTable(lines) {
+  return `<table class="changes">${lines.map((x) => `<tr><td>${esc(x.what)}</td><td>${x.kind === "service" ? serviceChange(x) : beforeAfter(x.before, x.after)}</td></tr>`).join("")}</table>`;
+}
+function beforeAfter(before, after) {
+  return `<span class="before">${esc(before)}</span><span class="arrow">→</span><span class="after">${esc(after)}</span>`;
+}
+function serviceChange(x) {
+  const text = x.parts.map((p) => p.change === "add" ? `<b class="added">${esc(p.text)}</b>` : p.change === "del" ? `<span class="before">${esc(p.text)}</span>` : esc(p.text)).join(" ");
+  return `${text}${x.status ? `<div class="svc-status">Status: ${beforeAfter(x.status.before, x.status.after)}</div>` : ""}`;
+}
+
+function checkVerdict(checks) {
+  if (!checks.length) return "";
+  const failed = checks.filter((c) => !c.ok).length;
+  const head = failed ? `<span class="check-fail">✗ ${failed} of ${checks.length} checks fail</span>`
+    : `<span class="check-ok">✓ All ${checks.length} checks pass</span>`;
+  return `<details ${failed ? "open" : ""}><summary>${head} <span class="more">Check details</span></summary>${checkTable(checks)}</details>`;
+}
+
+function checkTable(checks) {
+  const rows = checks.map((c) => {
+    const [first, ...rest] = c.detail.split("\n");
+    const why = c.ok ? "" : ` <a class="ask-why" data-ask="Why did the ${esc(c.name.toLowerCase())} check fail, and what would fix it?">Ask why</a>`;
+    return `<tr class="${c.ok ? "" : "fail"}"><td class="ck-name">${esc(c.name)}</td><td class="ck-verdict">${c.ok ? "✓" : "✗"} ${esc(c.verdict)}</td>
+      <td>${esc(first)}${rest.length ? `<div class="muted">${rest.map(esc).join("<br>")}</div>` : ""}${why}</td></tr>`;
+  }).join("");
+  return `<table class="check-table">${rows}</table>`;
+}
+
+/* changeId: set on a package waiting for approval, which shows a Waive link per charge. Waiving
+   is a revision: it pre-fills the revise box, and the agent redrafts without the fee. */
+function charges(fees, total, changeId = null) {
+  const charged = fees.filter((f) => f.defined && !f.waived);
+  const waived = fees.filter((f) => f.waived);
+  const waivedText = waived.length ? ` <span class="waived">(${esc(waived.map((f) => `${f.label} ${money(f.amount)}`).join(", "))} waived by trip manager)</span>` : "";
+  if (!charged.length) return `<span><span class="muted">Charges to client</span> none${waivedText}</span>`;
+  const how = fees.map((f) => (f.waived ? "WAIVED by trip manager: " : "") + f.summary).join("\n");
+  return `<details><summary><span class="muted">Charges to client</span> <span class="money">${money(total)}</span> <span class="muted">· ${esc(charged.map((f) => f.label || f.charge).join(" + "))}</span>${waivedText} <span class="more">How</span></summary><div class="check-list">${esc(how)}</div></details> <a class="ask-why" data-ask="How are the charges to the client worked out?">Ask</a>${
+    changeId ? charged.map((f) => ` <a class="ask-why" data-waive="${esc(changeId)}" data-waive-text="${esc(`Waive the ${money(f.amount)} charge (${(f.label || f.charge).toLowerCase()}).`)}">Waive${charged.length > 1 ? " " + esc(f.label || f.charge) : ""}</a>`).join("") : ""}`;
+}
+
+function optionCard(o) {
+  return `<div class="option"><div class="option__label">Option ${esc(o.label)} <a class="ask-why" data-ask="Why is option ${esc(o.label)} offered, and what does it change for the crew and the client?">Ask about this</a></div>
+    <div class="option__desc">${esc(o.description)}</div>
+    ${changesTable(o.changes_described)}
+    <div class="facts" style="margin-top:8px">${checkVerdict(o.checks)}</div>
+    <div style="margin-top:6px;font-size:14px">${charges(o.priced_fees, o.fee_total)}</div></div>`;
+}
+
+function messageRow(changeId, item) {
+  const key = `${changeId}/${item.id}`;
+  const edit = ui.edits[key];
+  const subject = edit ? edit.subject : item.message.subject;
+  const body = edit ? edit.body : item.message.body;
+  const open = !!ui.msgOpen[key];
+  const off = !!ui.msgOff[key];
+  return `<div class="msg ${off ? "off" : ""}" data-key="${esc(key)}">
+    <div class="msg__row" data-msg="${esc(key)}">
+      <input type="checkbox" data-include="${esc(key)}" ${off ? "" : "checked"} aria-label="Send this message">
+      <span class="role">${esc(item.message.recipient_role)}</span>
+      <span class="msg__to">${esc(item.to_name)}${edit ? '<span class="edited">edited</span>' : ""}</span>
+      <span class="msg__preview">${esc(subject)} — ${esc(body.replace(/\s+/g, " ").slice(0, 120))}</span>
+      <span class="muted">${open ? "▾" : "▸"}</span>
+    </div>
+    ${open ? `<div class="msg__open"><div class="addr">To ${esc(item.message.to)}</div>
+      <input data-subject="${esc(key)}" value="${esc(subject)}" aria-label="Subject">
+      <textarea data-body="${esc(key)}" aria-label="Message">${esc(body)}</textarea></div>` : ""}
+  </div>`;
+}
+
+function agentTrail(c) {
+  const events = c.agent ? c.agent.events.filter((e) => ["check", "proposal", "note", "tool_error", "stopped"].includes(e.kind)) : [];
+  if (!events.length) return "";
+  const meta = c.agent ? `${plural(events.length, "step")} · ${Math.round(c.agent.seconds)} s · ${c.agent.model}, ${c.agent.prompt_version}, ${c.agent.tools_version}` : "";
+  return `<details style="margin-top:16px"><summary><span class="more">How the agent got here</span> <span class="muted" style="font-size:13px">${esc(meta)}</span></summary>
+    <ul class="trail">${events.map((e) => `<li class="k-${e.kind === "check" && e.ok === false ? "fail" : e.kind}">${esc(plainText(e.text))}</li>`).join("")}</ul></details>`;
+}
+
+function actions(c, messages) {
+  const sending = messages.filter((m) => !ui.msgOff[`${c.id}/${m.id}`]).length;
+  const label = c.changes.length ? `Approve & send ${sending}` : `Approve & send${sending > 1 ? " " + sending : ""}`;
+  return `<div class="actions">
+    <button class="btn btn--primary" data-approve="${c.id}">${esc(label)}</button>
+    ${ui.rejecting[c.id] ? "" : `<button class="btn btn--danger" data-reject="${c.id}">Reject…</button>`}
+    ${!ui.rejecting[c.id] && api.suggestedRevision && api.suggestedRevision(c.id) ? '<span class="muted" style="font-size:13px">Sample mode: Reject replays a recorded revision.</span>' : ""}
+  </div>
+  ${ui.rejecting[c.id] ? `<div class="reject-form">
+      <label for="note-${c.id}">What should change? The agent will revise the package and re-check it.</label>
+      <textarea id="note-${c.id}" placeholder="e.g. The client won't move the morning leg. Only offer options that keep TEB at 08:00.">${esc(ui.prefill[c.id] || (api.suggestedRevision ? api.suggestedRevision(c.id) : ""))}</textarea>
+      <div class="actions" style="margin-top:8px">
+        <button class="btn btn--primary" data-revise="${c.id}">Revise with these instructions</button>
+        <button class="btn btn--danger" data-reject-confirm="${c.id}">Reject and close</button>
+        <button class="btn" data-reject-cancel="${c.id}">Cancel</button>
+      </div></div>` : ""}`;
+}
+
+function progressItem(c) {
+  const working = c.status === "Processing";
+  const steps = ui.liveSteps[c.id] || [];
+  const detail = working ? `${esc((ui.stepNow || {})[c.id] || c.step || "Reading the email")}…`
+    : c.sent.length ? `Sent to ${esc(c.sent.map((s) => s.to_name.split(" (")[0]).join(", "))}` : esc(c.summary);
+  const head = `<span class="status tone-${c.tone}">${working ? '<span class="dot dot--pulse"></span>Agent working' : `${esc(c.status)}${c.reason ? ` · ${esc(c.reason)}` : ""}`}</span>
+    <span class="grow">${detail}</span><span class="muted" style="font-size:13px">${esc(shortTime(c.created))}</span>`;
+  if (working) {
+    return `<div class="progress-line">${head}</div>
+      ${steps.length ? `<ul class="trail" style="margin:-2px 0 12px 16px">${steps.map((s) => `<li class="k-${s.state}">${esc(s.text)}</li>`).join("")}</ul>` : ""}`;
+  }
+  return `<details class="progress-card" ${ui.open[c.id] ? "open" : ""} data-remember="${c.id}"><summary class="progress-line">${head}<span class="more">Details</span></summary>
+    <div class="progress-body">${changeDetails(c)}</div></details>`;
+}
+
+function historyItem(c) {
+  return `<details class="hist" ${ui.open[c.id] ? "open" : ""} data-remember="${c.id}"><summary><b>${esc(c.id)}</b>${c.reason ? ` · <span class="muted">${esc(c.reason)}</span>` : ""} · ${esc(c.summary)} <span class="more">Details</span></summary>
+    <div style="margin-top:8px">${changeDetails(c)}</div></details>`;
+}
+
+/* The full record of a change that's waiting or done: why, what was sent, what the agent checked. */
+function changeDetails(c) {
+  const routing = c.sales_routing;
+  const rejections = c.history.filter((h) => h.event === "rejected" && h.note);
+  return `
+    ${c.email.subject ? `<details class="email"><summary class="more">${esc(c.request.label)}</summary><blockquote>${esc(c.request.text || "")}</blockquote></details>` : ""}
+    <div class="section-label">Agent's summary</div><p style="margin:0;font-size:14px;color:var(--ink-2)">${esc(c.summary)}</p>
+    ${rejections.map((h) => `<div class="section-label">Trip manager's instructions</div><p style="margin:0;font-size:14px">“${esc(h.note)}”</p>`).join("")}
+    ${routing ? `<div class="section-label">Routed to sales for a re-quote</div>
+      ${routing.messages.map((m) => `<blockquote class="sent-note"><b>${esc(m.subject)}</b>\n${esc(m.body)}</blockquote>`).join("")}
+      ${routing.held_updates.length ? `<div class="section-label">Held until the client accepts a new quote</div><ul class="sent-list">${routing.held_updates.map((h) => `<li><b>${esc(h.party)}</b>: ${esc(h.update)}</li>`).join("")}</ul>` : ""}` : ""}
+    ${c.changes.length ? `<div class="section-label">What changed</div>${changesTable(c.changes)}` : ""}
+    ${c.checks_run.length ? `<div class="section-label">Checks the agent ran</div>${checkTable(c.checks_run)}` : ""}
+    ${c.sent.length ? `<div class="section-label">Sent</div><ul class="sent-list">${c.sent.map((s) => `<li>${esc(shortTime(s.sent_at))} → ${esc(s.to_name)}: ${esc(s.subject)} <span class="muted">(${esc(s.condition.replace("_", " "))})</span></li>`).join("")}</ul>` : ""}
+    ${agentTrail(c)}`;
+}
+
+function wire(trip, rerender) {
+  if (trip.trip) {
+    document.querySelectorAll("[data-chat-open]").forEach((el) => el.onclick = () => openChat(trip.trip));
+    document.querySelectorAll("[data-ask]").forEach((el) => el.onclick = (e) => { e.preventDefault(); e.stopPropagation(); openChat(trip.trip, el.dataset.ask); });
+  }
+  document.querySelectorAll("details[data-remember]").forEach((el) => el.ontoggle = () => { ui.open[el.dataset.remember] = el.open; });
+  document.querySelectorAll("[data-toggle]").forEach((el) => el.onclick = () => { ui.open[el.dataset.toggle] = !ui.open[el.dataset.toggle]; rerender(); });
+  document.querySelectorAll("[data-msg]").forEach((el) => el.onclick = (e) => {
+    if (e.target.matches("input")) return;
+    ui.msgOpen[el.dataset.msg] = !ui.msgOpen[el.dataset.msg]; rerender();
+  });
+  document.querySelectorAll("[data-include]").forEach((el) => el.onchange = () => { ui.msgOff[el.dataset.include] = !el.checked; rerender(); });
+  const edit = (key, field, value) => {
+    const original = findItem(trip, key).message;
+    const current = ui.edits[key] || { subject: original.subject, body: original.body };
+    current[field] = value;
+    ui.edits[key] = current.subject === original.subject && current.body === original.body ? undefined : current;
+  };
+  document.querySelectorAll("[data-subject]").forEach((el) => el.oninput = () => edit(el.dataset.subject, "subject", el.value));
+  document.querySelectorAll("[data-body]").forEach((el) => el.oninput = () => edit(el.dataset.body, "body", el.value));
+  document.querySelectorAll("[data-approve]").forEach((el) => el.onclick = () => approveChange(trip, el.dataset.approve, el, rerender));
+  document.querySelectorAll("[data-reject]").forEach((el) => el.onclick = () => { ui.rejecting[el.dataset.reject] = true; rerender(); });
+  document.querySelectorAll("[data-reject-cancel]").forEach((el) => el.onclick = () => { ui.rejecting[el.dataset.rejectCancel] = false; delete ui.prefill[el.dataset.rejectCancel]; rerender(); });
+  document.querySelectorAll("[data-waive]").forEach((el) => el.onclick = async () => {
+    const id = el.dataset.waive;
+    ui.rejecting[id] = true;
+    ui.prefill[id] = el.dataset.waiveText + " Reason: ";
+    await rerender();
+    const box = $(`note-${id}`);
+    if (box) { box.scrollIntoView({ block: "center" }); box.focus(); box.setSelectionRange(box.value.length, box.value.length); }
+  });
+  document.querySelectorAll("[data-reject-confirm]").forEach((el) => el.onclick = async () => {
+    const id = el.dataset.rejectConfirm;
+    try { await api.reject(id, $(`note-${id}`).value.trim() || null); toast("Rejected and closed. Nothing was sent."); }
+    catch (error) { toast(error.message); }
+    ui.rejecting[id] = false; delete ui.prefill[id]; rerender();
+  });
+  document.querySelectorAll("[data-revise]").forEach((el) => el.onclick = async () => {
+    const id = el.dataset.revise;
+    const instructions = $(`note-${id}`).value.trim();
+    if (!instructions) { toast("Say what should change, so the agent can revise it."); $(`note-${id}`).focus(); return; }
+    el.disabled = true;
+    try { await api.revise(id, instructions); toast("The agent is revising it. Nothing was sent."); delete ui.prefill[id]; }
+    catch (error) { toast(error.message); }
+    ui.rejecting[id] = false; rerender();
+  });
+}
+
+function findItem(trip, key) {
+  const [changeId, itemId] = key.split("/");
+  return trip.decisions.find((c) => c.id === changeId).items.find((i) => i.id === itemId);
+}
+
+async function approveChange(trip, changeId, button, rerender) {
+  const change = trip.decisions.find((c) => c.id === changeId);
+  const decisions = {};
+  for (const item of change.items.filter((i) => i.decision === null && i.kind === "message")) {
+    const key = `${changeId}/${item.id}`;
+    if (ui.msgOff[key]) decisions[item.id] = { action: "reject" };
+    else if (ui.edits[key]) decisions[item.id] = { action: "edit", ...ui.edits[key] };
+  }
+  button.disabled = true;
+  try {
+    const result = await api.approve(changeId, decisions);
+    toast(result.executed ? `Approved. ${plural(result.sent.length, "message")} sent.` : "Re-check failed. Nothing was sent.");
+  } catch (error) {
+    toast(error.message);
+  }
+  rerender();
+}
+
+
+/* ---- Evals page ------------------------------------------------------------------------------ */
+async function renderEvals() {
+  const [overview, data] = await Promise.all([api.overview(), api.evals()]);
+  renderHeader(overview);
+  ui.evals = data;
+  const sum = data.summary;
+  const running = data.rows.filter((r) => r.live && r.live.state === "running").length;
+  $("view").innerHTML = `
+    <h1>Evals</h1>
+    <p class="evals-intro">Each case is a synthetic email with an answer key, run through the real agent and graded by code. A case passes only if every run passes every check. Your verdict is the human judgment on top: things code can't grade, like tone or whether an option is sensible.</p>
+    <div class="summary-strip">
+      ${sum ? `<span class="big ${sum.cases_passed === sum.cases ? "ok" : "bad"}">${sum.cases_passed} of ${sum.cases} cases pass</span>
+        <span>Published milestone run · ${esc(sum.run_at.replace("T", " "))}</span>
+        <span>${sum.repeat} run${sum.repeat === 1 ? "" : "s"} per case</span>
+        <span class="muted">${esc(sum.model)}, effort ${esc(sum.effort)} · ${esc(sum.prompt_version)} · ${esc(sum.tools_version)}${sum.chat_prompt_version ? " · " + esc(sum.chat_prompt_version) : ""} · $${sum.total_cost_usd.toFixed(2)} total</span>`
+        : `<span class="big">No published run yet</span><span class="muted">Run <span class="mono">uv run python -m evals.run --repeat 3 --publish</span></span>`}
+    </div>
+    <div class="evals-actions">
+      ${api.sample ? "" : `<button class="btn" id="runAll" ${running ? "disabled" : ""}>${running ? `Running ${plural(running, "case")}…` : "Run all"}</button>`}
+      <button class="btn" id="copyResults">Copy results</button>
+    </div>
+
+    <h2>Cases (${data.rows.length})</h2>
+    <table class="eval-table">
+      <thead><tr><th style="width:21%">Case</th><th style="width:25%">Expected</th><th style="width:27%">Actual</th><th style="width:9%">Code verdict</th><th style="width:13%">Your verdict</th><th style="width:5%"></th></tr></thead>
+      <tbody>${data.rows.map(evalRow).join("")}</tbody>
+    </table>
+
+    <h2>What the evals caught</h2>
+    <div class="stories">${data.stories.stories.map(storyCard).join("")}</div>
+    <p class="stories-note">${esc(data.stories.note)}</p>`;
+  wireEvals();
+}
+
+function storyCard(story) {
+  return `<div class="story"><h3>${esc(story.title)}</h3><dl>
+    <dt>Before</dt><dd>${esc(story.before)}</dd><dt>Change</dt><dd>${esc(story.change)}</dd><dt>After</dt><dd>${esc(story.after)}</dd></dl></div>`;
+}
+
+function evalRow(r) {
+  const pub = r.published;
+  const live = r.live;
+  const open = !!ui.open["eval-" + r.id];
+  const draft = ui.verdictDrafts?.[r.id] ?? r.verdict;
+  const codeVerdict = pub ? `<span class="${pub.passed ? "verdict-ok" : "verdict-bad"}">${pub.passed ? "✓" : "✗"} ${pub.passed_runs}/${pub.runs}</span>` : '<span class="muted">—</span>';
+  const liveLine = live ? (live.state === "running"
+      ? `<div class="live-run"><span class="live-tag"><span class="dot dot--pulse" style="display:inline-block;margin-right:4px"></span>Running now</span></div>`
+      : `<div class="live-run"><span class="live-tag">Run from this page</span> <span class="${live.passed ? "verdict-ok" : "verdict-bad"}">${live.passed ? "✓ pass" : "✗ fail"}</span><div>${esc(live.actual || live.error || "")}</div></div>`) : "";
+  return `
+    <tr class="case-row" data-case="${esc(r.id)}">
+      <td><span class="trip-id">${esc(r.id)}</span><span class="case-title">${esc(r.title)}</span><div class="case-type">${esc(r.type)}${r.setup.length ? " · " + esc(r.setup.join(" · ")) : ""}</div></td>
+      <td>${esc(r.expected)}</td>
+      <td>${pub ? esc(pub.actual || "") : '<span class="muted">Not run yet</span>'}${liveLine}</td>
+      <td>${codeVerdict}</td>
+      <td class="verdict-cell" data-stop>
+        <select data-verdict="${esc(r.id)}" aria-label="Your verdict" ${api.sample ? "disabled" : ""}>
+          <option value="">Not judged</option>
+          ${ui.evals.verdict_choices.map((v) => `<option ${draft.verdict === v ? "selected" : ""}>${v}</option>`).join("")}
+        </select>
+        <textarea data-note="${esc(r.id)}" placeholder="${api.sample ? "" : "Note (optional)"}" ${api.sample ? "disabled" : ""}>${esc(draft.note || "")}</textarea>
+      </td>
+      <td data-stop>${api.sample ? "" : `<button class="btn btn--small" data-run="${esc(r.id)}" ${live && live.state === "running" ? "disabled" : ""}>Run</button>`}</td>
+    </tr>
+    ${open ? `<tr class="detail"><td colspan="6">${evalDetail(r)}</td></tr>` : ""}`;
+}
+
+function evalDetail(r) {
+  const run = (r.live && r.live.state === "done") ? r.live : r.published;
+  const assertions = run ? run.assertions : [];
+  return `
+    ${r.email ? `<div class="section-label">Input email · from ${esc(r.email.from)}</div>
+    <blockquote class="sent-note" style="margin-top:0"><b>${esc(r.email.subject)}</b>\n${esc(r.email.body)}</blockquote>`
+      : `<div class="section-label">Question to the trip chat (trip ${esc(r.trip || "A1")})</div><blockquote class="sent-note" style="margin-top:0">${esc(r.question)}</blockquote>
+         ${run && run.answer ? `<div class="section-label">The chat's answer</div><blockquote class="sent-note" style="margin-top:0">${esc(plainText(run.answer))}</blockquote>` : ""}`}
+    ${r.instructions ? `<div class="section-label">Trip manager's instructions (revision)</div><p style="margin:0">“${esc(r.instructions)}”</p>` : ""}
+    ${checksRunList(run)}
+    ${assertions.length ? `<div class="section-label">Answer key: what the code graded ${r.live && r.live.state === "done" ? "(run from this page)" : "(published run)"}</div>
+      <table class="assert-table">${assertions.map((a) => `<tr class="${a.passed ? "" : "fail"}"><td>${a.passed ? "✓" : "✗"}</td><td class="mono">${esc(a.type)}</td><td>expected ${esc(a.expected)}</td><td>got ${esc(a.actual)}</td></tr>`).join("")}</table>` : ""}
+    ${run && run.trail.length ? `<details style="margin-top:12px"><summary class="more">How the agent got here</summary><ul class="trail">${run.trail.map((e) => `<li class="k-${e.kind === "check" && e.ok === false ? "fail" : e.kind}">${esc(plainText(e.text))}</li>`).join("")}</ul></details>` : ""}
+    ${run && run.messages.length ? `<details style="margin-top:8px"><summary class="more">Drafted messages (${run.messages.length})</summary>${run.messages.map((m) => `<blockquote class="sent-note"><b>To ${esc(m.to)} (${esc(m.recipient_role)}) · ${esc(m.subject)}</b>\n${esc(m.body)}</blockquote>`).join("")}</details>` : ""}`;
+}
+
+/* The checks the agent actually ran in this run, from its trail: one line each, name and verdict. */
+function checksRunList(run) {
+  const checks = (run ? run.trail : []).filter((e) => e.kind === "check");
+  if (!run) return "";
+  if (!checks.length) return `<div class="section-label">Checks the agent ran</div><p style="margin:0;font-size:14px" class="muted">None: no flight or pricing checks in this run.</p>`;
+  const rows = checks.map((e) => {
+    const cut = e.text.indexOf(": ");
+    const name = cut > 0 ? e.text.slice(0, cut) : "Check";
+    const detail = cut > 0 ? e.text.slice(cut + 2) : e.text;
+    return `<tr class="${e.ok === false ? "fail" : ""}"><td class="ck-name">${esc(name)}</td><td class="ck-verdict">${e.ok === false ? "✗" : "✓"}</td><td>${esc(detail)}</td></tr>`;
+  }).join("");
+  return `<div class="section-label">Checks the agent ran</div><table class="check-table" style="margin-top:0">${rows}</table>`;
+}
+
+function wireEvals() {
+  document.querySelectorAll("tr.case-row").forEach((row) => row.onclick = (e) => {
+    if (e.target.closest("[data-stop]")) return;
+    const key = "eval-" + row.dataset.case;
+    ui.open[key] = !ui.open[key];
+    renderEvals();
+  });
+  ui.verdictDrafts ||= {};
+  const save = async (caseId) => {
+    const draft = ui.verdictDrafts[caseId];
+    try { await api.saveVerdict(caseId, draft.verdict || null, draft.note || ""); toast("Verdict saved."); }
+    catch (error) { toast(error.message); }
+  };
+  const draftFor = (caseId) => (ui.verdictDrafts[caseId] ||= { ...ui.evals.rows.find((r) => r.id === caseId).verdict });
+  document.querySelectorAll("[data-verdict]").forEach((el) => el.onchange = () => { draftFor(el.dataset.verdict).verdict = el.value || null; save(el.dataset.verdict); });
+  document.querySelectorAll("[data-note]").forEach((el) => {
+    el.oninput = () => { draftFor(el.dataset.note).note = el.value; };
+    el.onchange = () => save(el.dataset.note);
+  });
+  document.querySelectorAll("[data-run]").forEach((el) => el.onclick = async () => {
+    el.disabled = true;
+    try { await api.runEval(el.dataset.run); toast(`Running case ${el.dataset.run} with the real agent (about 5¢).`); }
+    catch (error) { toast(error.message); }
+  });
+  if ($("runAll")) $("runAll").onclick = async () => {
+    const estimate = (ui.evals.rows.length * 0.07).toFixed(2);
+    const published = ui.evals.summary ? ` The published milestone from ${shortTime(ui.evals.summary.run_at).split(" ")[0]} stays as it is.` : "";
+    if (!confirm(`Run all ${ui.evals.rows.length} cases now with the real agent? About $${estimate}. New results appear under each case as "Run from this page".${published}`)) return;
+    try { await api.runAllEvals(); toast("Running all cases."); } catch (error) { toast(error.message); }
+  };
+  $("copyResults").onclick = async () => {
+    const lines = ["| Case | Expected | Actual | Code verdict | Your verdict | Note |", "|---|---|---|---|---|---|"];
+    for (const r of ui.evals.rows) {
+      const v = ui.verdictDrafts?.[r.id] ?? r.verdict;
+      const code = r.published ? `${r.published.passed ? "✓" : "✗"} ${r.published.passed_runs}/${r.published.runs}` : "not run";
+      const cell = (t) => String(t ?? "").replace(/\|/g, "\\|").replace(/\n/g, " ");
+      lines.push(`| ${cell(r.id + " " + r.title)} | ${cell(r.expected)} | ${cell(r.published?.actual)} | ${code} | ${cell(v.verdict || "")} | ${cell(v.note)} |`);
+    }
+    try { await navigator.clipboard.writeText(lines.join("\n")); toast("Results copied as a table."); }
+    catch { toast("Couldn't copy: the browser blocked clipboard access."); }
+  };
+}
+
+
+/* ---- Trip chat (read-only) ------------------------------------------------------------------- */
+const STARTERS = ["Why did the agent recommend this?", "Would 17:30 work instead?", "What's still unconfirmed on this trip?"];
+
+function openChat(tripId, question) {
+  ui.chat ||= {};
+  ui.chat.trip = tripId;
+  ui.chat[tripId] ||= { turns: [] };
+  document.body.classList.add("chat-open");
+  renderChat();
+  if (question) askChat(question);
+  else setTimeout(() => $("chatInput")?.focus(), 50);
+}
+
+function closeChat() {
+  document.body.classList.remove("chat-open");
+  $("chatPanel")?.remove();
+  if (ui.chat) ui.chat.trip = null;
+}
+
+function renderChat() {
+  const tripId = ui.chat?.trip;
+  if (!tripId) return closeChat();
+  let panel = $("chatPanel");
+  if (!panel) { panel = document.createElement("aside"); panel.id = "chatPanel"; panel.className = "chat-panel"; document.body.appendChild(panel); }
+  const turns = ui.chat[tripId].turns;
+  panel.innerHTML = `
+    <div class="chat-head"><div><b>Ask about trip ${esc(tripId)}</b><span class="muted">Answers from the trip's data and the checks. Read-only: it can't change anything.</span></div>
+      <button class="chat-close" id="chatClose" aria-label="Close">×</button></div>
+    <div class="chat-body" id="chatBody">
+      ${turns.length ? "" : `<div class="chat-starters">${(api.sample ? api.chatQuestions(tripId) : STARTERS).map((q) => `<button data-starter="${esc(q)}">${esc(q)}</button>`).join("")}</div>`}
+      ${turns.map(chatTurn).join("")}
+    </div>
+    <form class="chat-form" id="chatForm"><textarea id="chatInput" placeholder="${api.sample ? "In sample mode, pick a recorded question above." : "Ask about this trip…"}" ${api.sample ? "disabled" : ""}></textarea><button class="btn btn--primary" ${api.sample ? "disabled" : ""}>Ask</button></form>`;
+  $("chatClose").onclick = closeChat;
+  panel.querySelectorAll("[data-starter]").forEach((b) => b.onclick = () => askChat(b.dataset.starter));
+  panel.querySelectorAll("[data-revise-suggestion]").forEach((b) => b.onclick = () => useSuggestion(Number(b.dataset.reviseSuggestion)));
+  $("chatForm").onsubmit = (e) => { e.preventDefault(); const q = $("chatInput").value.trim(); if (q) askChat(q); };
+  $("chatInput").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("chatForm").requestSubmit(); } };
+  const body = $("chatBody"); body.scrollTop = body.scrollHeight;
+}
+
+function chatTurn(turn, index) {
+  const used = turn.tools && turn.tools.length ? `<span class="used">Checked: ${esc([...new Set(turn.tools.filter((t) => t !== "suggest_revision").map((t) => t.replace(/^(check_|get_|find_|compute_)/, "").replaceAll("_", " ")))].join(", ") || "the trip's data")}</span>` : "";
+  const suggestion = turn.suggestion ? `<div class="chat-suggest"><p><b>Suggested revision of ${esc(turn.suggestion.change_id)}:</b> “${esc(turn.suggestion.instructions)}”</p>
+      ${turn.used ? `<span class="muted">Sent to the change agent.</span>` : `<button class="btn btn--small btn--primary" data-revise-suggestion="${index}">Revise with this</button>`}</div>` : "";
+  return `<div class="chat-q">${esc(turn.question)}</div>
+    <div class="chat-a">${turn.pending ? '<span class="dot dot--pulse" style="display:inline-block;margin-right:6px"></span>Checking…' : esc(plainText(turn.answer))}${used}${suggestion}</div>`;
+}
+
+async function askChat(question) {
+  const tripId = ui.chat.trip;
+  const turns = ui.chat[tripId].turns;
+  const history = turns.filter((t) => !t.pending && t.answer).map((t) => ({ question: t.question, answer: t.answer, tools: t.tools || [] }));
+  const turn = { question, pending: true };
+  turns.push(turn);
+  renderChat();
+  try {
+    const result = await api.chat(tripId, question, history);
+    Object.assign(turn, { pending: false, answer: result.answer, suggestion: result.suggestion, tools: result.tools_used });
+  } catch (error) {
+    Object.assign(turn, { pending: false, answer: error.message });
+  }
+  if (ui.chat.trip === tripId) renderChat();
+}
+
+async function useSuggestion(index) {
+  const turn = ui.chat[ui.chat.trip].turns[index];
+  try {
+    await api.revise(turn.suggestion.change_id, turn.suggestion.instructions);
+    turn.used = true;
+    toast("The agent is revising it with those instructions. Nothing was sent.");
+  } catch (error) { toast(error.message); }
+  renderChat();
+}
+
+/* ---- Reference: aircraft, crew, airports and vendors, clients (read-only) ------------------------- */
+const REF_TABS = [["aircraft", "Aircraft"], ["crew", "Crew"], ["airports", "Airports and vendors"], ["clients", "Clients"]];
+const refLink = (tab, id, text) => `<a class="ref-link" href="#/reference/${tab}/${encodeURIComponent(id)}">${esc(text)}</a>`;
+const boardLink = (kind, id) => `<a class="ref-link board-link" href="#/schedule/${kind}/${encodeURIComponent(id)}">View on the schedule board →</a>`;
+const personId = (name) => name.toLowerCase().replaceAll(" ", "-");
+const pilotLinks = (crew) => crew.members.map((m) => refLink("crew", personId(m.name), m.name)).join(" / ");
+const tripCrews = (trip) => [...new Map(trip.legs.map((l) => [l.crew.id, l.crew])).values()];
+// Photos and maps are served by the live app. The exported file leaves them out to stay small and readable.
+const assetUrl = (path) => (SAMPLE ? null : `/static/${path}`);
+
+async function renderReference(tab, id) {
+  if (!REF_TABS.some(([t]) => t === tab)) tab = "aircraft";
+  const ref = await api.reference();
+  $("view").innerHTML = `
+    <div class="trip-head"><h1>Reference</h1></div>
+    <div class="segmented" style="margin:14px 0 16px">${REF_TABS.map(([t, name]) => `<a href="#/reference/${t}" class="${t === tab ? "on" : ""}">${name}</a>`).join("")}</div>
+    ${tab === "airports" ? airportControls(ref) : ""}
+    <div id="refList">${refEntries(ref, tab)}</div>`;
+  if (tab === "airports") wireAirportControls(ref);
+  const target = id && document.getElementById(`ref-${tab}-${id}`);
+  if (target) {
+    const folded = target.closest("details");
+    if (folded) folded.open = true;
+    target.classList.add("target");
+    target.scrollIntoView({ block: "start" });
+  }
+}
+
+function refEntries(ref, tab) {
+  if (tab === "crew") return ref.pilots.map(pilotEntry).join("");
+  if (tab === "clients") return ref.clients.map(clientEntry).join("");
+  if (tab === "airports") return airportList(ref);
+  return ref.aircraft.map(aircraftEntry).join("");
+}
+
+function aircraftEntry(a) {
+  return `<div class="record ref-entry" id="ref-aircraft-${esc(a.tail)}">
+    <div class="ref-head"><span class="ref-name">${esc(a.tail)}</span><span>${esc(a.type_name)}</span>
+      <span class="ref-facts num">${a.seats} seats · ${a.range_nm.toLocaleString("en-US")} nm range · ${a.cruise_kt} kt cruise · based at ${refLink("airports", a.base, a.base)}</span></div>
+    ${a.photos.length ? `<div class="ref-photos">${a.photos.map((p) => photo(p, a.tail)).join("")}</div>` : ""}
+    <div class="ref-foot">${boardLink("aircraft", a.tail)}</div></div>`;
+}
+
+function photo(p, tail) {
+  const src = assetUrl("photos/" + p.file);
+  const mask = p.mask ? `<span class="tail-mask" style="left:${p.mask.x}%;top:${p.mask.y}%;width:${p.mask.w}%;height:${p.mask.h}%" title="Registration blurred: stock photo, not ${esc(tail)}"></span>` : "";
+  return `<figure class="ref-photo">${src
+      ? `<div class="ref-photo__img"><img src="${src}" alt="${esc(p.caption)}"${p.kind === "cabin" ? ' class="crop"' : ""}>${mask}</div>`
+      : `<div class="ref-photo__img ref-photo__none">${esc(p.caption)} photo: shown in the live app</div>`}
+    <figcaption>${esc(p.caption)} · Photo: <a class="ref-link" href="${esc(p.source)}" target="_blank" rel="noopener">${esc(p.credit)}</a>, ${esc(p.license)}</figcaption></figure>`;
+}
+
+function pilotEntry(p) {
+  return `<div class="record ref-entry" id="ref-crew-${esc(p.id)}">
+    <div class="ref-head"><span class="ref-name">${esc(p.name)}</span><span>${esc(p.role)}</span>
+      <span class="ref-facts">Rated on the ${esc(p.rating)} · based at ${refLink("airports", p.base, p.base)}</span></div>
+    <div class="leg-section">${esc(p.email)} · ${esc(p.phone)}</div>
+    <div class="leg-section"><span class="muted">Usually flies with</span> ${p.flies_with.map((n) => refLink("crew", personId(n), n)).join(", ")}</div>
+    <div class="ref-foot">${boardLink("pilot", p.id)}</div></div>`;
+}
+
+function clientEntry(c) {
+  const contacts = c.people.filter((p) => p.contact);
+  const passport = (p) => p.passport ? `${esc(p.passport.number)} <span class="muted">${esc(p.passport.country)} · exp ${esc(p.passport.expires)}</span>` : "—";
+  const home = (p) => `${esc(p.home)}${p.nearest_airport && p.nearest_airport !== "—" ? ` · nearest ${refLink("airports", p.nearest_airport, p.nearest_airport)}` : ""}`;
+  return `<div class="record ref-entry" id="ref-clients-${esc(c.id)}">
+    <div class="ref-head"><span class="ref-name">${esc(c.company)}</span><span class="ref-facts">${plural(c.trip_count, "trip")} this week</span></div>
+    <div class="leg-section">${contacts.map((p) => `<div class="ref-person"><span><b>${esc(p.name)}</b> <span class="muted">${esc(p.role)}</span></span>
+      <span class="num">${esc(p.phone)}${p.email ? `<br><span class="muted">${esc(p.email)}</span>` : ""}</span><span>${home(p)}</span></div>`).join("")}</div>
+    <details class="ref-people"><summary>All passengers (${c.people.length})</summary>
+      <table class="ref-table"><tr><th>Name</th><th>Role</th><th>Phone</th><th>Home</th><th>Passport</th></tr>
+      ${c.people.map((p) => `<tr id="ref-clients-${esc(p.id)}"><td><b>${esc(p.name)}</b></td><td>${esc(p.role)}</td><td class="num">${esc(p.phone)}</td><td>${home(p)}</td><td class="num">${passport(p)}</td></tr>`).join("")}
+      </table></details>
+    <div class="ref-foot">${c.next_trip ? `<a class="ref-link board-link" href="#/schedule/trip/${encodeURIComponent(c.next_trip)}">View next trip on schedule board →</a>` : '<span class="muted">No upcoming trips this week.</span>'}</div></div>`;
+}
+
+/* Airports: the operator's favorites, out of a much larger directory (not loaded in the prototype). */
+function airportControls(ref) {
+  const all = ui.airportScope === "all";
+  return `<div class="filters" style="margin-bottom:12px">
+      <div class="segmented"><button data-scope="favorites" class="${all ? "" : "on"}">Favorites (${ref.airports.length})</button><button data-scope="all" class="${all ? "on" : ""}">All airports</button></div>
+      <input id="airportSearch" class="ref-search" type="search" placeholder="Search by code, name or city" value="${esc(ui.airportQuery || "")}">
+    </div>
+    ${all ? `<div class="notice" style="background:var(--waiting-bg);color:var(--waiting);margin-top:0">The full directory (about ${ref.directory_size.toLocaleString("en-US")} US airports) isn't loaded in this prototype. Showing the operator's favorites.</div>` : ""}`;
+}
+
+function wireAirportControls(ref) {
+  document.querySelectorAll("[data-scope]").forEach((b) => b.addEventListener("click", () => {
+    ui.airportScope = b.dataset.scope; renderReference("airports");
+  }));
+  $("airportSearch").addEventListener("input", (e) => { ui.airportQuery = e.target.value; $("refList").innerHTML = airportList(ref); });
+}
+
+function airportList(ref) {
+  const q = (ui.airportQuery || "").trim().toLowerCase();
+  const shown = ref.airports.filter((a) => !q || [a.code, a.name, a.city].some((v) => String(v || "").toLowerCase().includes(q)));
+  return shown.length ? shown.map(airportEntry).join("") : '<div class="muted">No favorite airport matches. The full directory isn\'t loaded in this prototype.</div>';
+}
+
+function airportEntry(a) {
+  const service = (s) => `${s.type.replace("_", " ")}${s.how === "arranged_by_fbo" ? " (arranged by the FBO)" : ""}, ${s.lead_time_hours} h notice`;
+  return `<div class="record ref-entry" id="ref-airports-${esc(a.code)}">
+    <div class="ref-airport">
+      <div>
+        <div class="ref-head"><span class="ref-name">${esc(a.code)}</span><span>${esc(a.name)}</span><span class="ref-facts">${esc(a.city || "")}</span><span class="fav">★ Favorite</span></div>
+        <dl class="kv" style="margin-top:12px">
+          <dt>Hours</dt><dd>${esc(a.hours)}</dd>
+          <dt>Elevation</dt><dd class="num">${a.elevation_ft != null ? `${a.elevation_ft.toLocaleString("en-US")} ft` : "—"}</dd>
+          <dt>Longest runway</dt><dd class="num">${esc(a.runway || "—")}</dd>
+          <dt>IFR approaches</dt><dd>${esc((a.approaches || []).join(" · ") || "—")}</dd>
+        </dl>
+      </div>
+      ${airportMap(a)}
+    </div>
+    ${a.vendors.length ? a.vendors.map((v) => `<div class="ref-vendor" id="ref-airports-${esc(v.id)}">
+      <b>${esc(v.name)}</b> <span class="muted">${v.kind === "fbo" ? "FBO" : esc(v.kind)}</span>
+      <div>${v.contacts.map((c) => `${esc(c.name)} <span class="muted">${esc(c.email)} · ${esc(c.phone)}</span>`).join("<br>")}</div>
+      <div class="muted">${esc(v.services.map(service).join(" · "))}</div></div>`).join("")
+      : '<div class="muted" style="font-size:14px;padding-top:8px">No vendors on file.</div>'}</div>`;
+}
+
+function airportMap(a) {
+  if (!a.map) return "";
+  if (!assetUrl("maps/")) return '<div class="ref-map ref-photo__none">Map: shown in the live app</div>';
+  const W = 260, H = 190, [px, py] = a.map.pin;
+  const left = Math.max(0, Math.min(512 - W, px - W / 2)), top = Math.max(0, Math.min(512 - H, py - H / 2));
+  const tiles = a.map.tiles.map((f) => {
+    const [dx, dy] = f.slice(-6, -4).split("").map(Number);
+    return `<img src="${assetUrl("maps/" + f)}" alt="" style="left:${dx * 256 - left}px;top:${dy * 256 - top}px">`;
+  }).join("");
+  return `<div class="ref-map" style="width:${W}px;height:${H}px" aria-label="Map of ${esc(a.name)}">${tiles}
+    <span class="ref-pin" style="left:${px - left}px;top:${py - top}px"></span>
+    <a class="ref-map__credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div>`;
+}
+
+/* ---- Schedule board: the week by aircraft or by pilot, as a 3-day timeline or a week grid ------ */
+const BOARD_HOURS = [5, 23];   // the timeline shows 05:00–23:00 each day; nights are folded away
+const KIND_CLASS = { client: "k-client", positioning: "k-pos", maintenance: "k-mx", standby: "k-standby", proposed: "k-prop" };
+
+async function renderSchedule(kind, id) {
+  const board = await api.schedule();
+  const b = (ui.board ||= { view: "3day", by: "aircraft", start: board.today, aircraft: "", pilot: "", client: "", trip: "" });
+  if (kind && id && ui.boardLink !== `${kind}/${id}`) {   // arriving from a link: show what it points at
+    ui.boardLink = `${kind}/${id}`;
+    Object.assign(b, { aircraft: "", pilot: "", client: "", trip: "" });
+    if (kind === "aircraft") Object.assign(b, { by: "aircraft", aircraft: id });
+    if (kind === "pilot") Object.assign(b, { by: "pilot", pilot: id });
+    if (kind === "trip") {
+      const first = board.aircraft.flatMap((r) => r.items).filter((i) => i.trip === id).sort((x, y) => x.start.localeCompare(y.start))[0];
+      Object.assign(b, { by: "aircraft", view: "3day", trip: id,
+        start: first ? Math.min(4, Math.max(0, board.days.findIndex((d) => d.date === first.start.slice(0, 10)))) : b.start });
+    }
+  }
+  const rows = (b.by === "aircraft" ? board.aircraft.filter((r) => !b.aircraft || r.id === b.aircraft)
+                                    : board.pilots.filter((r) => !b.pilot || r.id === b.pilot));
+  const days = b.view === "week" ? board.days : board.days.slice(b.start, b.start + 3);
+  const option = (value, text, current) => `<option value="${esc(value)}"${value === current ? " selected" : ""}>${esc(text)}</option>`;
+  $("view").innerHTML = `
+    <div class="trip-head"><h1>Schedule</h1></div>
+    <div class="filters board-controls">
+      <div class="segmented"><button data-board="view:3day" class="${b.view === "3day" ? "on" : ""}">3 days</button><button data-board="view:week" class="${b.view === "week" ? "on" : ""}">Week</button></div>
+      <div class="segmented"><button data-board="by:aircraft" class="${b.by === "aircraft" ? "on" : ""}">By aircraft</button><button data-board="by:pilot" class="${b.by === "pilot" ? "on" : ""}">By pilot</button></div>
+      ${b.view === "3day" ? `<span class="board-range"><button class="btn" data-board="step:-1" ${b.start === 0 ? "disabled" : ""} aria-label="Earlier">‹</button>
+        <span class="num">${esc(days[0].label)} – ${esc(days[days.length - 1].label)}</span>
+        <button class="btn" data-board="step:1" ${b.start >= 4 ? "disabled" : ""} aria-label="Later">›</button></span>`
+        : `<span class="num muted">${esc(days[0].label)} – ${esc(days[6].label)}</span>`}
+      ${b.by === "aircraft" ? `<select data-filter="aircraft" aria-label="Aircraft">${option("", "All aircraft", b.aircraft)}${board.aircraft.map((r) => option(r.id, `${r.title} · ${r.subtitle}`, b.aircraft)).join("")}</select>`
+        : `<select data-filter="pilot" aria-label="Pilot">${option("", "All pilots", b.pilot)}${board.pilots.map((r) => option(r.id, r.title, b.pilot)).join("")}</select>`}
+      <select data-filter="client" aria-label="Client">${option("", "All clients", b.client)}${board.clients.map((c) => option(c.id, c.company, b.client)).join("")}</select>
+      ${b.trip ? `<span class="board-chip">Trip ${esc(b.trip)} <button data-board="trip:" aria-label="Clear">×</button></span>` : ""}
+    </div>
+    <p class="muted board-note">The demo week, fixed. The full app would let you pick any dates.</p>
+    <div id="board"></div>
+    <div class="board-legend">
+      <span><i class="k-client"></i>Client flight</span><span><i class="k-pos"></i>Positioning</span>
+      <span><i class="k-mx"></i>Maintenance</span>${b.by === "pilot" ? '<span><i class="k-standby"></i>Standby</span><span><i class="k-duty"></i>Duty day (report to release)</span>' : ""}
+      <span><i class="k-prop"></i>Proposed, waiting for your approval</span><span><i class="k-now"></i>Now (demo clock)</span>
+    </div>`;
+  const narrow = window.matchMedia("(max-width: 700px)").matches;
+  if (narrow) boardList(rows, days, board, b);
+  else if (b.view === "week") boardWeek(rows, days, board, b);
+  else boardTimeline(rows, days, board, b);
+
+  document.querySelectorAll("[data-board]").forEach((el) => el.addEventListener("click", () => {
+    const [key, value] = el.dataset.board.split(":");
+    if (key === "step") b.start = Math.min(4, Math.max(0, b.start + Number(value)));
+    else b[key] = value;
+    renderSchedule();
+  }));
+  document.querySelectorAll("[data-filter]").forEach((el) => el.addEventListener("change", () => { b[el.dataset.filter] = el.value; renderSchedule(); }));
+}
+
+const dimmed = (item, b) => (b.client && item.client !== b.client) || (b.trip && item.trip !== b.trip);
+const itemHref = (item) => (item.trip ? `#/trips/${encodeURIComponent(item.trip)}` : null);
+const itemTitle = (item) => `${item.start.slice(11)}–${item.end.slice(11)} ${item.label}${item.note ? ` (${item.note})` : ""}${item.trip ? ` · trip ${item.trip}` : ""}`;
+
+/* 3 days, drawn to scale. A label sits inside its bar when it fits, otherwise above or below it,
+   on whichever line is free; a proposed move gets its own lane under the flight it replaces. */
+function boardTimeline(rows, days, board, b) {
+  const [h0, h1] = BOARD_HOURS, span = h1 - h0;
+  const x = (iso) => {
+    const d = days.findIndex((day) => day.date === iso.slice(0, 10));
+    if (d < 0) return null;
+    const hour = Math.min(h1, Math.max(h0, Number(iso.slice(11, 13)) + Number(iso.slice(14, 16)) / 60));
+    return ((d * span + hour - h0) / (days.length * span)) * 100;
+  };
+  const grid = days.map((_, d) => `<div class="tl-day" style="left:${(d / days.length) * 100}%"></div>`
+    + [12, 18].map((hh) => `<div class="tl-tick" style="left:${((d * span + hh - h0) / (days.length * span)) * 100}%"></div>`).join("")).join("");
+  const head = days.map((day, d) => `<span class="tl-dl" style="left:calc(${(d / days.length) * 100}% + 6px)">${esc(day.label)}</span>`
+    + [6, 12, 18].map((hh) => `<span class="tl-hl" style="left:${((d * span + hh - h0) / (days.length * span)) * 100}%">${String(hh).padStart(2, "0")}</span>`).join("")).join("");
+  const nowX = x(board.now);
+  const inWindow = (i) => x(i.start) !== null || x(i.end) !== null;
+  $("board").innerHTML = `<div class="tl">
+    <div class="tl-row tl-head"><div class="tl-label"></div><div class="tl-track">${grid}${head}</div></div>
+    ${rows.map((r, n) => {
+      const tall = r.items.some((i) => i.kind === "proposed" && inWindow(i));
+      const duty = (r.duty || []).filter((d) => x(d.start) !== null).map((d) =>
+        `<div class="tl-duty" style="left:${x(d.start)}%;width:${x(d.end) - x(d.start)}%" title="${esc(d.label)}"><span>${esc(d.label)}</span></div>`).join("");
+      return `<div class="tl-row"><div class="tl-label"><b>${esc(r.title)}</b><small>${esc(r.subtitle)}</small></div>
+        <div class="tl-track${tall ? " tall" : ""}${r.duty ? " pilot" : ""}" id="tl-${n}">${grid}${duty}
+          ${nowX !== null ? `<div class="tl-now" style="left:${nowX}%"></div>` : ""}</div></div>`;
+    }).join("")}
+    ${rows.length ? "" : '<div class="muted" style="padding:14px">Nothing matches these filters.</div>'}</div>`;
+
+  const ruler = document.createElement("span");
+  ruler.className = "tl-cap";
+  ruler.style.visibility = "hidden";
+  $("board").appendChild(ruler);
+  const textWidth = (text) => { ruler.textContent = text; return ruler.offsetWidth + 8; };
+  rows.forEach((r, n) => {
+    const track = $("tl-" + n), W = track.clientWidth, lanes = { up: -1, dn: -1 };
+    const html = [];
+    for (const item of r.items.filter(inWindow)) {
+      const left = x(item.start) ?? 0, right = x(item.end) ?? 100, width = Math.max(right - left, 0.8);
+      const href = itemHref(item), tag = href ? "a" : "div", fade = dimmed(item, b) ? " faded" : "";
+      const hl = b.trip && item.trip === b.trip ? " hl" : "";
+      const bar = `<${tag} class="tl-bar ${KIND_CLASS[item.kind]}${fade}${hl}"${href ? ` href="${href}"` : ""} style="left:${left}%;width:${width}%" title="${esc(itemTitle(item))}"></${tag}>`;
+      html.push(bar);
+      const tw = textWidth(item.label), px = (left / 100) * W, bw = (width / 100) * W;
+      if (item.kind === "proposed") {   // its own lane, label to the left of the dashed bar
+        const at = Math.max(0, Math.min(px - tw - 4, W - tw));
+        html.push(`<span class="tl-cap prop${fade}" style="left:${at}px">${esc(item.label)}</span>`);
+        continue;
+      }
+      if (tw <= bw) { html.push(`<span class="tl-in ${KIND_CLASS[item.kind]}-t${fade}" style="left:${left}%">${esc(item.label)}</span>`); continue; }
+      const start = Math.max(0, Math.min(px, W - tw));
+      const below = track.classList.contains("tall") ? Infinity : lanes.dn;   // a proposal's lane is reserved
+      const lane = lanes.up < start ? "up" : below < start ? "dn" : "up";
+      lanes[lane] = start + tw;
+      html.push(`<span class="tl-cap ${lane}${fade}" style="left:${start}px">${esc(item.label)}</span>`);
+    }
+    track.insertAdjacentHTML("beforeend", html.join(""));
+  });
+  ruler.remove();
+}
+
+/* The week: one cell per row and day, holding that day's items in time order. */
+function boardWeek(rows, days, board, b) {
+  const today = board.now.slice(0, 10);
+  $("board").innerHTML = `<div class="wk" style="grid-template-columns:150px repeat(${days.length}, minmax(0, 1fr))">
+    <div class="wk-h"></div>${days.map((d) => `<div class="wk-h${d.date === today ? " today" : ""}">${esc(d.label)}${d.date === today ? `<small>now ${esc(board.now.slice(11))}</small>` : ""}</div>`).join("")}
+    ${rows.map((r) => `<div class="wk-row"><b>${esc(r.title)}</b><small>${esc(r.subtitle)}</small></div>` + days.map((d) => {
+      const duty = (r.duty || []).find((x) => x.start.startsWith(d.date));
+      return `<div class="wk-c${d.date === today ? " today" : ""}">${r.items.filter((i) => i.start.startsWith(d.date)).map((i) => {
+        const href = itemHref(i), tag = href ? "a" : "div";
+        return `<${tag} class="wk-chip ${KIND_CLASS[i.kind]}${dimmed(i, b) ? " faded" : ""}${b.trip && i.trip === b.trip ? " hl" : ""}"${href ? ` href="${href}"` : ""} title="${esc(itemTitle(i))}"><b>${esc(i.time)}</b> ${esc(i.kind === "proposed" ? "proposed" : i.label)}</${tag}>`;
+      }).join("")}${duty ? `<div class="wk-duty">${esc(duty.label)}</div>` : ""}</div>`;
+    }).join("")).join("")}</div>`;
+}
+
+/* Phones: a list by day. */
+function boardList(rows, days, board, b) {
+  $("board").innerHTML = days.map((d) => {
+    const items = rows.flatMap((r) => r.items.filter((i) => i.start.startsWith(d.date)).map((i) => ({ ...i, row: r.title })))
+      .sort((x, y) => x.start.localeCompare(y.start));
+    return `<div class="record board-day"><div class="section-label">${esc(d.label)}</div>${items.length ? items.map((i) => {
+      const href = itemHref(i), tag = href ? "a" : "div";
+      return `<${tag} class="board-li${dimmed(i, b) ? " faded" : ""}"${href ? ` href="${href}"` : ""}><span class="wk-chip ${KIND_CLASS[i.kind]}"><b>${esc(i.time)}</b></span><span><b>${esc(i.row)}</b> ${esc(i.label)}</span></${tag}>`;
+    }).join("") : '<div class="muted">Nothing scheduled.</div>'}</div>`;
+  }).join("");
+}
+
+/* ---- Router and live updates -------------------------------------------------------------------- */
+function route() {
+  const hash = location.hash || "#/";
+  api.overview().then(renderHeader).catch(() => {});   // the clock and the agent strip, on every page
+  const trip = hash.match(/^#\/trips\/([^/]+)$/);
+  const change = hash.match(/^#\/changes\/([^/]+)$/);
+  if (!trip || (ui.chat && ui.chat.trip && ui.chat.trip !== decodeURIComponent(trip[1]))) closeChat();
+  $("tabEvals").classList.toggle("on", hash.startsWith("#/evals"));
+  $("tabReference").classList.toggle("on", hash.startsWith("#/reference"));
+  $("tabSchedule").classList.toggle("on", hash.startsWith("#/schedule"));
+  $("tabTrips").classList.toggle("on", !["#/evals", "#/reference", "#/schedule"].some((p) => hash.startsWith(p)));
+  if (hash.startsWith("#/evals")) return renderEvals();
+  const schedule = hash.match(/^#\/schedule(?:\/([^/]+)\/([^/]+))?$/);
+  if (schedule) return renderSchedule(schedule[1], schedule[2] && decodeURIComponent(schedule[2]));
+  const reference = hash.match(/^#\/reference(?:\/([^/]+))?(?:\/([^/]+))?$/);
+  if (reference) return renderReference(reference[1], reference[2] && decodeURIComponent(reference[2]));
+  if (trip) return renderTrip(decodeURIComponent(trip[1]));
+  if (change) return renderUnmatched(change[1]);
+  ui.seenRows = null;
+  return renderTrips();
+}
+
+async function renderUnmatched(changeId) {
+  // A request the agent couldn't tie to one trip: the same card, on its own page.
+  const [overview, card] = await Promise.all([api.overview(), api.change(changeId)]);
+  renderHeader(overview);
+  ui.open[card.id] = true;
+  $("view").innerHTML = `<a class="back" href="#/">← Trips</a>
+    <div class="trip-head"><h1>Trip unclear · ${esc(card.email.from || "")}</h1></div>
+    <p class="trip-meta">The agent couldn't tell which trip this email is about, so it is asking.</p>
+    <h2>Needs your decision</h2>${decisionCard(card)}`;
+  wire({ trip: null, decisions: [card] }, () => renderUnmatched(changeId));
+}
+
+let pending = null;
+function refreshSoon() {
+  // Don't redraw under someone typing a message edit; catch up when they leave the field.
+  const active = document.activeElement;
+  if (active && active.matches("textarea, input:not([type=checkbox])") && $("view").contains(active)) {
+    active.addEventListener("blur", refreshSoon, { once: true });
+    return;
+  }
+  clearTimeout(pending);
+  pending = setTimeout(() => {
+    const hash = location.hash || "#/";
+    if (hash === "#/" || hash === "#") renderTrips(); else route();
+  }, 120);
+}
+
+function onLiveEvent(event) {
+  if (event.type === "step") {
+    // One line per tool: "Checking crew duty…" becomes its result when the result arrives.
+    const steps = (ui.liveSteps[event.change] ||= []);
+    const last = steps[steps.length - 1];
+    if (event.kind === "step") { steps.push({ text: event.text + "…", state: "live" }); (ui.stepNow ||= {})[event.change] = event.text; }
+    else if (last && last.state === "live" && event.kind === "check") Object.assign(last, { text: event.text, state: event.ok === false ? "fail" : "check" });
+    else if (last && last.state === "live" && event.kind === "read") Object.assign(last, { text: last.text.replace(/…$/, ""), state: "read" });
+    else if (event.kind === "proposal" || event.kind === "note") steps.push({ text: event.text, state: event.kind });
+    refreshSoon();
+    return;
+  }
+  if (event.type === "eval") { if ((location.hash || "").startsWith("#/evals")) refreshSoon(); return; }
+  if (event.type === "reset") { Object.assign(ui, { open: {}, msgOpen: {}, msgOff: {}, edits: {}, rejecting: {}, prefill: {}, liveSteps: {} }); }
+  refreshSoon();
+}
+
+async function setUpDemo() {
+  try {
+    const inbox = await api.inbox();
+    $("demoMessage").innerHTML = inbox.map((m) => `<option value="${esc(m.id)}">${esc(m.id)} · ${esc(m.subject)}</option>`).join("");
+  } catch { $("demo").hidden = true; }
+  $("deliver").onclick = async () => {
+    try { await api.deliver($("demoMessage").value); toast("Email delivered to the ops inbox."); }
+    catch (error) { toast(error.message); }
+  };
+  $("reset").onclick = async () => { await api.reset(); location.hash = "#/"; toast("Reset to the base week."); };
+}
+
+window.addEventListener("hashchange", route);
+window.addEventListener("popstate", route);
+setUpDemo();
+api.subscribe(onLiveEvent);
+route();
+</script>
+</body>
+</html>

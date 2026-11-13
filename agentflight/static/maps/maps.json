@@ -1,0 +1,98 @@
+{
+ "BED": {
+  "tiles": [
+   "BED-00.png",
+   "BED-10.png",
+   "BED-01.png",
+   "BED-11.png"
+  ],
+  "pin": [
+   228,
+   328
+  ]
+ },
+ "TEB": {
+  "tiles": [
+   "TEB-00.png",
+   "TEB-10.png",
+   "TEB-01.png",
+   "TEB-11.png"
+  ],
+  "pin": [
+   346,
+   244
+  ]
+ },
+ "PBI": {
+  "tiles": [
+   "PBI-00.png",
+   "PBI-10.png",
+   "PBI-01.png",
+   "PBI-11.png"
+  ],
+  "pin": [
+   177,
+   204
+  ]
+ },
+ "HPN": {
+  "tiles": [
+   "HPN-00.png",
+   "HPN-10.png",
+   "HPN-01.png",
+   "HPN-11.png"
+  ],
+  "pin": [
+   351,
+   176
+  ]
+ },
+ "ACK": {
+  "tiles": [
+   "ACK-00.png",
+   "ACK-10.png",
+   "ACK-01.png",
+   "ACK-11.png"
+  ],
+  "pin": [
+   223,
+   224
+  ]
+ },
+ "IAD": {
+  "tiles": [
+   "IAD-00.png",
+   "IAD-10.png",
+   "IAD-01.png",
+   "IAD-11.png"
+  ],
+  "pin": [
+   186,
+   312
+  ]
+ },
+ "APF": {
+  "tiles": [
+   "APF-00.png",
+   "APF-10.png",
+   "APF-01.png",
+   "APF-11.png"
+  ],
+  "pin": [
+   148,
+   137
+  ]
+ },
+ "SAN": {
+  "tiles": [
+   "SAN-00.png",
+   "SAN-10.png",
+   "SAN-01.png",
+   "SAN-11.png"
+  ],
+  "pin": [
+   164,
+   378
+  ]
+ }
+}

@@ -1,0 +1,52 @@
+{
+  "currency": "USD",
+  "hourly_rates": {
+    "note": "For sales re-quotes only. Operations and the agent never quote these.",
+    "phenom_300": 4200,
+    "citation_xls": 5600,
+    "challenger_350": 7800
+  },
+  "notice_rule": "Notice runs from when the request arrives (the simulated clock) to the leg's currently scheduled departure, before the change. A tier applies when notice is at least its min_notice_hours.",
+  "change_fees": {
+    "departure_time_change": {
+      "label": "Departure time change, same day",
+      "basis": "per_affected_leg",
+      "tiers": [
+        {"min_notice_hours": 72, "amount": 0},
+        {"min_notice_hours": 24, "amount": 500},
+        {"min_notice_hours": 0,  "amount": 1500}
+      ]
+    },
+    "date_change": {
+      "label": "Date change, whole trip",
+      "basis": "per_trip",
+      "tiers": [
+        {"min_notice_hours": 72, "amount": 1000},
+        {"min_notice_hours": 24, "amount": 2500},
+        {"min_notice_hours": 0,  "amount": 5000}
+      ]
+    },
+    "catering_change": {
+      "label": "Catering change",
+      "basis": "flat",
+      "amount": 0
+    },
+    "passengers_added_within_capacity": {
+      "label": "Passengers added within seat capacity",
+      "basis": "flat",
+      "amount": 0
+    }
+  },
+  "fixed_charges": {
+    "crew_swap": {
+      "label": "Crew swap",
+      "basis": "per_swap",
+      "amount": 2500
+    },
+    "crew_overnight": {
+      "label": "Crew overnight, when a change adds one",
+      "basis": "per_night",
+      "amount": 600
+    }
+  }
+}

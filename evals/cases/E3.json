@@ -1,0 +1,29 @@
+{
+  "id": "E3",
+  "title": "Crew reports a weather delay; auto-send off",
+  "type": "Approval policy",
+  "expected": "Same weather delay with auto-send off: a change package waiting for approval; nothing sent.",
+  "clock": "2026-10-29T07:30",
+  "start": [],
+  "email": {
+    "from": "dana.whitlock@larkhaven.example.com",
+    "subject": "Weather hold at TEB",
+    "body": "Ops,\n\nFog at Teterboro this morning. We're on a ground hold and expect to depart for Bedford at 08:45 instead of 08:00. Passengers are in the lounge and know about the delay.\n\nDana Whitlock\nCaptain, N307LH"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    }
+  ]
+}

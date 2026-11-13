@@ -1,0 +1,5 @@
+[
+  {"tail": "N307LH", "type": "phenom_300", "type_name": "Phenom 300", "seats": 7, "cruise_kt": 430, "range_nm": 1800, "base": "BED"},
+  {"tail": "N350LH", "type": "challenger_350", "type_name": "Challenger 350", "seats": 9, "cruise_kt": 459, "range_nm": 3200, "base": "BED"},
+  {"tail": "N560LH", "type": "citation_xls", "type_name": "Citation XLS", "seats": 8, "cruise_kt": 441, "range_nm": 1850, "base": "TEB"}
+]

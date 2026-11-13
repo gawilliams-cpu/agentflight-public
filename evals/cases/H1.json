@@ -1,0 +1,22 @@
+{
+  "id": "H1",
+  "title": "\"Why didn't you just push to 18:00?\"",
+  "type": "Trip chat",
+  "expected": "Explains the crew duty limit with the numbers from the agent's trail: 14 h 13 min against the 14 h limit. Changes nothing.",
+  "kind": "chat",
+  "fixture": "after-demo-2",
+  "trip": "A1",
+  "question": "Why didn't you just push to 18:00?",
+  "expect": [
+    {
+      "type": "answer_matches",
+      "any": [
+        "14\\s*h\\s*13",
+        "14h\\s*13",
+        "14:13",
+        "13 min(utes)? over"
+      ],
+      "means": "cites 14 h 13 min (or 13 min over) against 14 h"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "F4r",
+  "title": "Trip manager rejects the options: don't move the morning leg",
+  "type": "Execution",
+  "expected": "The trip manager rejects the options because the client won't move the morning leg: revised options for the client, none of which move leg 1; leg 2 is not moved to 18:00.",
+  "start": [
+    {
+      "op": "move_leg",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:00"
+    }
+  ],
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Re: Thursday — Bedford departure",
+    "body": "Hi again,\n\nSorry to do this — the meeting is now looking even later. Could we move the Bedford departure to 6pm instead?\n\nThanks so much,\nMorgan"
+  },
+  "revision": {
+    "previous_summary": "Crew duty fails at 18:00 (14 h 13 min). Three options for the client: A) depart 17:45 with the same crew, $500; B) depart 18:00 and move A1-1 from 08:00 to 08:15, $1,000; C) depart 18:00 with Nandakumar/Kessler, who also fly P-1030, $3,000.",
+    "instructions": "The client won't move the morning leg. Only offer options that keep the TEB departure at 08:00."
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Options for client"
+    },
+    {
+      "type": "no_record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T18:00"
+    },
+    {
+      "type": "no_option_moves",
+      "leg_id": "A1-1"
+    },
+    {
+      "type": "options",
+      "min": 1
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    }
+  ]
+}

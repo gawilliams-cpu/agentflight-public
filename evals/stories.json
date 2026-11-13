@@ -1,0 +1,17 @@
+{
+  "note": "Not comprehensive; included as examples.",
+  "stories": [
+    {
+      "title": "The sales note went to the wrong address",
+      "before": "The first time the eval suite ran (10 cases then), one case failed: 5b. The agent correctly sent an 8-passenger change to sales for a re-quote, but addressed the note to ops@ instead of sales@, because no tool told it the sales address.",
+      "change": "Who receives a routing note is policy, not judgment. The agent now writes only the note; code addresses it to sales from the operator data (tools v3).",
+      "after": "Re-run after the fix: every case passed, 5 runs each."
+    },
+    {
+      "title": "Medium effort missed the crew-swap option",
+      "before": "Demo change 2 at medium effort offered only \"depart 17:45\". High effort found the crew swap too, but cost 14¢ and took 82 seconds.",
+      "change": "The search for fixes moved into code: a find_duty_fixes tool tries the standard fixes and returns only those that pass every check, priced from the rate card (tools v2).",
+      "after": "Three verified options at medium effort, 7¢ and 17 seconds."
+    }
+  ]
+}

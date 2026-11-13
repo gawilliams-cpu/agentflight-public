@@ -1,0 +1,18 @@
+[
+  {
+    "id": "A",
+    "company": "Halden Ridge Partners",
+    "contacts": [
+      {"name": "Alex Halden", "role": "Principal", "email": "alex.halden@haldenridge.example.com"},
+      {"name": "Morgan Pryce", "role": "Executive assistant", "email": "morgan.pryce@haldenridge.example.com"}
+    ]
+  },
+  {"id": "B", "company": "Corrigan Marine Holdings", "contacts": [{"name": "Jamie Corrigan", "role": "Principal", "email": "jamie.corrigan@corriganmarine.example.com"}]},
+  {"id": "C", "company": "Ostrava Biotech", "contacts": [{"name": "Riley Novak", "role": "Executive assistant", "email": "riley.novak@ostravabio.example.com"}]},
+  {"id": "D", "company": "Pemberton & Vale LLP", "contacts": [{"name": "Taylor Vale", "role": "Partner", "email": "taylor.vale@pembertonvale.example.com"}]},
+  {"id": "E", "company": "Saltmarsh Capital", "contacts": [{"name": "Avery Lund", "role": "Office manager", "email": "avery.lund@saltmarshcap.example.com"}]},
+  {"id": "F", "company": "Brightwater Foundation", "contacts": [{"name": "Quinn Adair", "role": "Director", "email": "quinn.adair@brightwater.example.com"}]},
+  {"id": "G", "company": "Kestrel Lane Ventures", "contacts": [{"name": "Drew Kaplan", "role": "Executive assistant", "email": "drew.kaplan@kestrellane.example.com"}]},
+  {"id": "H", "company": "Northgate Analytics", "contacts": [{"name": "Robin Ashby", "role": "Chief of staff", "email": "robin.ashby@northgate.example.com"}]},
+  {"id": "I", "company": "Whitcombe Family Office", "contacts": [{"name": "Emerson Whitcombe", "role": "Principal", "email": "emerson.whitcombe@whitcombefo.example.com"}]}
+]

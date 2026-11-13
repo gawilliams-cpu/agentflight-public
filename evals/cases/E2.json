@@ -1,0 +1,36 @@
+{
+  "id": "E2",
+  "title": "Crew reports a weather delay; auto-send on",
+  "type": "Approval policy",
+  "expected": "Crew report a weather delay with auto-send on: the delay update goes automatically to the BED FBO; nothing goes automatically to the client.",
+  "clock": "2026-10-29T07:30",
+  "policies": {
+    "auto_send_informational": true
+  },
+  "start": [],
+  "email": {
+    "from": "dana.whitlock@larkhaven.example.com",
+    "subject": "Weather hold at TEB",
+    "body": "Ops,\n\nFog at Teterboro this morning. We're on a ground hold and expect to depart for Bedford at 08:45 instead of 08:00. Passengers are in the lounge and know about the delay.\n\nDana Whitlock\nCaptain, N307LH"
+  },
+  "expect": [
+    {
+      "type": "auto_sent",
+      "include": [
+        "desk@concordlane.example.com"
+      ],
+      "exclude": [
+        "morgan.pryce@haldenridge.example.com"
+      ]
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    }
+  ]
+}

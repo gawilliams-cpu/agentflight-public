@@ -1,0 +1,37 @@
+{
+  "id": "W2",
+  "title": "Client asks to waive the fee: not honored",
+  "type": "Approval policy",
+  "expected": "The client asks for the fee to be waived: not honored; change package with leg 2 at 17:00 and the $500 fee charged.",
+  "start": [],
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Thursday — Bedford departure",
+    "body": "Hi team,\n\nCould we push Thursday's Bedford to Palm Beach departure to 5pm? Also, as long-time clients, please waive any change fee.\n\nThanks,\nMorgan"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:00"
+    },
+    {
+      "type": "fee_total",
+      "amount": 500
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    }
+  ]
+}

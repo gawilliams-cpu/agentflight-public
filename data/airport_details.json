@@ -1,0 +1,91 @@
+{
+ "note": "Display-only airport details for the Reference view. Illustrative values, not used by any check; the checks use airports.json.",
+ "BED": {
+  "city": "Bedford, MA",
+  "elevation_ft": 133,
+  "runway": "11/29 \u00b7 7,011 \u00d7 150 ft",
+  "approaches": [
+   "ILS RWY 11",
+   "RNAV (GPS) RWY 11",
+   "RNAV (GPS) RWY 29",
+   "RNAV (GPS) RWY 23"
+  ]
+ },
+ "TEB": {
+  "city": "Teterboro, NJ",
+  "elevation_ft": 9,
+  "runway": "6/24 \u00b7 7,000 \u00d7 150 ft",
+  "approaches": [
+   "ILS RWY 6",
+   "RNAV (GPS) RWY 6",
+   "RNAV (GPS) RWY 19",
+   "VOR/DME RWY 24"
+  ]
+ },
+ "PBI": {
+  "city": "West Palm Beach, FL",
+  "elevation_ft": 19,
+  "runway": "10L/28R \u00b7 10,000 \u00d7 150 ft",
+  "approaches": [
+   "ILS RWY 10L",
+   "ILS RWY 28R",
+   "RNAV (GPS) RWY 10L",
+   "RNAV (GPS) RWY 28R"
+  ]
+ },
+ "HPN": {
+  "city": "White Plains, NY",
+  "elevation_ft": 439,
+  "runway": "16/34 \u00b7 6,549 \u00d7 150 ft",
+  "approaches": [
+   "ILS RWY 16",
+   "ILS RWY 34",
+   "RNAV (GPS) RWY 16",
+   "RNAV (GPS) RWY 34"
+  ]
+ },
+ "ACK": {
+  "city": "Nantucket, MA",
+  "elevation_ft": 47,
+  "runway": "6/24 \u00b7 6,303 \u00d7 150 ft",
+  "approaches": [
+   "ILS RWY 24",
+   "RNAV (GPS) RWY 6",
+   "RNAV (GPS) RWY 24",
+   "VOR RWY 24"
+  ]
+ },
+ "IAD": {
+  "city": "Dulles, VA",
+  "elevation_ft": 313,
+  "runway": "1L/19R \u00b7 11,500 \u00d7 150 ft",
+  "approaches": [
+   "ILS RWY 1C",
+   "ILS RWY 1R",
+   "ILS RWY 19C",
+   "ILS RWY 19L",
+   "RNAV (GPS) RWY 1L"
+  ]
+ },
+ "APF": {
+  "city": "Naples, FL",
+  "elevation_ft": 8,
+  "runway": "5/23 \u00b7 6,600 \u00d7 150 ft",
+  "approaches": [
+   "RNAV (GPS) RWY 5",
+   "RNAV (GPS) RWY 23",
+   "VOR RWY 5"
+  ]
+ },
+ "SAN": {
+  "city": "San Diego, CA",
+  "elevation_ft": 17,
+  "runway": "9/27 \u00b7 9,401 \u00d7 200 ft",
+  "approaches": [
+   "ILS RWY 27",
+   "LOC RWY 27",
+   "RNAV (GPS) RWY 9",
+   "RNAV (GPS) RWY 27"
+  ]
+ }
+}

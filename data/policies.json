@@ -1,0 +1,18 @@
+{
+  "approval": {
+    "needs_trip_manager_approval": [
+      "Any message to the client",
+      "Any new or changed request to a vendor",
+      "Crew notifications",
+      "Any fee or charge"
+    ],
+    "no_approval_needed": [
+      "The internal routing note to sales",
+      "An informational update to a party already on the trip, only when auto-send is on"
+    ]
+  },
+  "auto_send_informational": false,
+  "readiness_threshold_hours": 24,
+  "routing": "Only sales changes the quoted price. A re-quote is needed when the charter itself changes: a different aircraft, added or removed legs, or a changed route or flight time. Vendor updates are held until the client accepts the new quote. Fixed charges in the rate card are applied by operations with trip manager approval and never need sales.",
+  "grounding": "Vendor details, contacts, prices, and fees come only from these data files and tool results. Anything not in the data is flagged, never invented."
+}

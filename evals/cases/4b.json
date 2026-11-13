@@ -1,0 +1,43 @@
+{
+  "id": "4b",
+  "title": "The client picks option B by letter only, with no quoted text",
+  "type": "Execution",
+  "expected": "Morgan replies \"B, please\" with nothing quoted: the agent takes option B from our records (leg 2 at 18:00, leg 1 at 08:15), re-checks crew duty, and prices $1,000 in change fees.",
+  "fixture": "options-sent",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Re: Thursday — Bedford departure",
+    "body": "B, please. Alex is fine with the earlier start.\n\nMorgan"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T18:00"
+    },
+    {
+      "type": "record_update",
+      "leg_id": "A1-1",
+      "departure": "2026-10-29T08:15"
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    },
+    {
+      "type": "fee_total",
+      "amount": 1000
+    }
+  ],
+  "start": []
+}

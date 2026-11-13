@@ -1,0 +1,47 @@
+{
+  "id": "6",
+  "title": "Push to 17:30, and maybe add a couple people",
+  "type": "Edge",
+  "expected": "\"Push to 17:30, and maybe add a couple people\": the time change is proposed (leg 2 at 17:30); the passenger change is held; the client gets one email that confirms 17:30 and asks for the extra passengers' details.",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Thursday",
+    "body": "Hi team,\n\nCan we push Thursday's Bedford departure to 5:30pm? And we may add a couple of people, I'll know more soon.\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:30"
+    },
+    {
+      "type": "no_passenger_update",
+      "leg_id": "A1-2"
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    },
+    {
+      "type": "client_messages",
+      "exactly": 1,
+      "mentions": [
+        "passenger",
+        "people",
+        "guest",
+        "manifest"
+      ]
+    }
+  ],
+  "start": []
+}

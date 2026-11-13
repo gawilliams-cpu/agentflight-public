@@ -1,0 +1,10 @@
+{
+  "name": "Larkhaven Air",
+  "certificate": "Part 135",
+  "base": "BED",
+  "ops_email": "ops@larkhaven.example.com",
+  "people": [
+    {"name": "Casey Moreno", "role": "Trip manager", "email": "casey.moreno@larkhaven.example.com", "phone": "617-555-0100"},
+    {"name": "Reese Calloway", "role": "Charter sales", "email": "sales@larkhaven.example.com", "phone": "617-555-0101"}
+  ]
+}

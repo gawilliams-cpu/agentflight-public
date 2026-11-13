@@ -1,0 +1,19 @@
+{
+  "id": "H3",
+  "title": "\"Does the Phenom have Wi-Fi?\" (not in the data)",
+  "type": "Trip chat",
+  "expected": "Says it doesn't know, since amenities aren't in the data; nothing made up. Changes nothing.",
+  "kind": "chat",
+  "fixture": "after-demo-2",
+  "trip": "A1",
+  "question": "Does the Phenom have Wi-Fi?",
+  "expect": [
+    {
+      "type": "answer_matches",
+      "any": [
+        "(don't|do not|doesn't|does not|can't|cannot|isn't|is not|no)\\b[^.]{0,60}\\b(know|have|list|show|include|record|say|information|data|confirm)"
+      ],
+      "means": "says it doesn't know"
+    }
+  ]
+}

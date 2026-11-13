@@ -1,0 +1,119 @@
+[
+  {
+    "id": "fbo-bed",
+    "name": "Concord Lane Aviation",
+    "kind": "fbo",
+    "airport": "BED",
+    "contacts": [{"name": "Front desk", "email": "desk@concordlane.example.com", "phone": "781-555-0120"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 2},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 1},
+      {"type": "hangar", "how": "direct", "lead_time_hours": 12},
+      {"type": "parking", "how": "direct", "lead_time_hours": 2}
+    ]
+  },
+  {
+    "id": "cat-bed",
+    "name": "Fenwick Table Catering",
+    "kind": "caterer",
+    "airport": "BED",
+    "contacts": [{"name": "Orders", "email": "orders@fenwicktable.example.com", "phone": "781-555-0121"}],
+    "services": [
+      {"type": "catering", "how": "direct", "lead_time_hours": 12}
+    ]
+  },
+  {
+    "id": "fbo-teb",
+    "name": "Hackensack River Jet Services",
+    "kind": "fbo",
+    "airport": "TEB",
+    "contacts": [{"name": "Customer service", "email": "csr@hackensackriverjet.example.com", "phone": "201-555-0122"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 2},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 1},
+      {"type": "parking", "how": "direct", "lead_time_hours": 2},
+      {"type": "car_service", "how": "arranged_by_fbo", "lead_time_hours": 4}
+    ]
+  },
+  {
+    "id": "fbo-pbi",
+    "name": "Palmetto Coast Aviation",
+    "kind": "fbo",
+    "airport": "PBI",
+    "contacts": [{"name": "Concierge desk", "email": "concierge@palmettocoast.example.com", "phone": "561-555-0123"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 2},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 1},
+      {"type": "parking", "how": "direct", "lead_time_hours": 2},
+      {"type": "hangar", "how": "direct", "lead_time_hours": 12},
+      {"type": "car_service", "how": "arranged_by_fbo", "lead_time_hours": 4},
+      {"type": "crew_hotel", "how": "arranged_by_fbo", "lead_time_hours": 6},
+      {"type": "catering", "how": "arranged_by_fbo", "lead_time_hours": 24}
+    ]
+  },
+  {
+    "id": "fbo-hpn",
+    "name": "Westchester Hollow Aviation",
+    "kind": "fbo",
+    "airport": "HPN",
+    "contacts": [{"name": "Front desk", "email": "frontdesk@westchesterhollow.example.com", "phone": "914-555-0124"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 2},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 1},
+      {"type": "parking", "how": "direct", "lead_time_hours": 2}
+    ]
+  },
+  {
+    "id": "fbo-ack",
+    "name": "Sconset Field Services",
+    "kind": "fbo",
+    "airport": "ACK",
+    "contacts": [{"name": "Front desk", "email": "desk@sconsetfield.example.com", "phone": "508-555-0125"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 4},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 2},
+      {"type": "parking", "how": "direct", "lead_time_hours": 24},
+      {"type": "car_service", "how": "arranged_by_fbo", "lead_time_hours": 12}
+    ]
+  },
+  {
+    "id": "fbo-iad",
+    "name": "Potomac Gate Aviation",
+    "kind": "fbo",
+    "airport": "IAD",
+    "contacts": [{"name": "Operations", "email": "ops@potomacgate.example.com", "phone": "703-555-0126"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 2},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 1},
+      {"type": "parking", "how": "direct", "lead_time_hours": 2},
+      {"type": "car_service", "how": "arranged_by_fbo", "lead_time_hours": 4}
+    ]
+  },
+  {
+    "id": "fbo-apf",
+    "name": "Gulfshore Pines Aviation",
+    "kind": "fbo",
+    "airport": "APF",
+    "contacts": [{"name": "Front desk", "email": "desk@gulfshorepines.example.com", "phone": "239-555-0127"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 2},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 1},
+      {"type": "parking", "how": "direct", "lead_time_hours": 2},
+      {"type": "car_service", "how": "arranged_by_fbo", "lead_time_hours": 4},
+      {"type": "crew_hotel", "how": "arranged_by_fbo", "lead_time_hours": 6},
+      {"type": "catering", "how": "arranged_by_fbo", "lead_time_hours": 24}
+    ]
+  },
+  {
+    "id": "fbo-san",
+    "name": "Harbor Mesa Air Center",
+    "kind": "fbo",
+    "airport": "SAN",
+    "contacts": [{"name": "Front desk", "email": "desk@harbormesa.example.com", "phone": "619-555-0128"}],
+    "services": [
+      {"type": "handling", "how": "direct", "lead_time_hours": 2},
+      {"type": "fuel", "how": "direct", "lead_time_hours": 1},
+      {"type": "parking", "how": "direct", "lead_time_hours": 2}
+    ]
+  }
+]

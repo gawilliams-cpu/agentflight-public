@@ -1,0 +1,39 @@
+{
+  "id": "5a",
+  "title": "Boundary: add two passengers (5 to 7) fits",
+  "type": "Boundary",
+  "expected": "Adding two passengers (5 to 7) fits: seats and watchlist checked; passenger list updated to 7; the client, caterer and PBI FBO are told.",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Two more for Thursday",
+    "body": "Hi team,\n\nTwo more people will join Thursday's flight from Bedford to Palm Beach: Daniel Moreau and Leah Whitfield. That makes seven on that leg.\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "passenger_update",
+      "leg_id": "A1-2",
+      "count": 7
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        "check_capacity",
+        "check_watchlist"
+      ]
+    },
+    {
+      "type": "recipients",
+      "include": [
+        "morgan.pryce@haldenridge.example.com",
+        "orders@fenwicktable.example.com",
+        "concierge@palmettocoast.example.com"
+      ]
+    }
+  ],
+  "start": []
+}

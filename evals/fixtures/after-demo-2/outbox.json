@@ -1,0 +1,74 @@
+[
+ {
+  "id": "msg-001",
+  "change": "chg-005",
+  "trip": "A1",
+  "to": "morgan.pryce@haldenridge.example.com",
+  "recipient_role": "client",
+  "subject": "Thursday departure moved to 5:00pm",
+  "body": "Hi Morgan,\n\nWe can move Thursday's Bedford to Palm Beach departure to 5:00pm (from 4:00pm). Estimated arrival in Palm Beach is 7:43pm. Crew duty and airport hours all check out, and the rest of the trip stays as planned. A same-day departure time change fee of $500 applies. Please reply to confirm and we will finalize with the vendors.\n\nBest regards,\nLarkhaven Air operations team",
+  "condition": "approved",
+  "sent_at": "2026-10-27T09:00",
+  "logged_at": "2026-10-16T14:41:41"
+ },
+ {
+  "id": "msg-002",
+  "change": "chg-005",
+  "trip": "A1",
+  "to": "desk@concordlane.example.com",
+  "recipient_role": "fbo",
+  "subject": "N307LH 10/29 BED departure moved to 17:00",
+  "body": "Please note N307LH's departure from BED to PBI on Thu 10/29 moves from 16:00 to 17:00. Passenger count is 5 (3 boarding at BED). The arrival from TEB at 08:40 is unchanged. Please confirm.\n\nLarkhaven Air operations team",
+  "condition": "approved",
+  "sent_at": "2026-10-27T09:00",
+  "logged_at": "2026-10-16T14:41:41"
+ },
+ {
+  "id": "msg-003",
+  "change": "chg-005",
+  "trip": "A1",
+  "to": "orders@fenwicktable.example.com",
+  "recipient_role": "caterer",
+  "subject": "Dinner for 5, N307LH 10/29 \u2013 new delivery time",
+  "body": "Departure from BED on Thu 10/29 moves from 16:00 to 17:00. Please deliver dinner for 5 to the aircraft at 16:15 (45 minutes before departure) instead of 15:15. Please confirm.\n\nLarkhaven Air operations team",
+  "condition": "approved",
+  "sent_at": "2026-10-27T09:00",
+  "logged_at": "2026-10-16T14:41:41"
+ },
+ {
+  "id": "msg-004",
+  "change": "chg-005",
+  "trip": "A1",
+  "to": "concierge@palmettocoast.example.com",
+  "recipient_role": "fbo",
+  "subject": "N307LH 10/29 PBI arrival now 19:43",
+  "body": "N307LH's arrival at PBI on Thu 10/29 moves from 18:43 to 19:43 (departing BED 17:00). 5 passengers. Please adjust arrival handling, the planeside SUV for 5, and the crew hotel (2 rooms, night of 10/29, later check-in). Aircraft remains overnight. Please confirm.\n\nLarkhaven Air operations team",
+  "condition": "approved",
+  "sent_at": "2026-10-27T09:00",
+  "logged_at": "2026-10-16T14:41:41"
+ },
+ {
+  "id": "msg-005",
+  "change": "chg-005",
+  "trip": "A1",
+  "to": "dana.whitlock@larkhaven.example.com",
+  "recipient_role": "crew",
+  "subject": "10/29 BED\u2013PBI departure moved to 17:00",
+  "body": "A1-2 BED to PBI on Thu 10/29 now departs 17:00 (was 16:00), arriving PBI 19:43. A1-1 TEB\u2013BED at 08:00 is unchanged, with 07:00 report. Duty day ends about 20:13, within limits.\n\nLarkhaven Air operations team",
+  "condition": "approved",
+  "sent_at": "2026-10-27T09:00",
+  "logged_at": "2026-10-16T14:41:41"
+ },
+ {
+  "id": "msg-006",
+  "change": "chg-005",
+  "trip": "A1",
+  "to": "marcus.reyes@larkhaven.example.com",
+  "recipient_role": "crew",
+  "subject": "10/29 BED\u2013PBI departure moved to 17:00",
+  "body": "A1-2 BED to PBI on Thu 10/29 now departs 17:00 (was 16:00), arriving PBI 19:43. A1-1 TEB\u2013BED at 08:00 is unchanged, with 07:00 report. Duty day ends about 20:13, within limits.\n\nLarkhaven Air operations team",
+  "condition": "approved",
+  "sent_at": "2026-10-27T09:00",
+  "logged_at": "2026-10-16T14:41:41"
+ }
+]

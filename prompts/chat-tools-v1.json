@@ -1,0 +1,45 @@
+{
+  "version": "chat-tools-v1",
+  "note": "The trip chat's tools: the change agent's read and check tools (descriptions from the agent's tool file), plus suggest_revision. No tool here changes, drafts, sends, or approves anything.",
+  "from_agent_tools": [
+    "get_trip",
+    "get_schedule",
+    "get_vendors",
+    "get_rate_card",
+    "get_fleet",
+    "check_crew_duty",
+    "check_capacity",
+    "check_range_and_flight_time",
+    "check_airport_hours",
+    "check_watchlist",
+    "find_available_crew",
+    "check_aircraft_availability",
+    "check_aircraft_schedule",
+    "compute_change_fee",
+    "find_duty_fixes"
+  ],
+  "tools": [
+    {
+      "name": "suggest_revision",
+      "description": "Suggest instructions for revising an open change, shown to the trip manager as a button. Nothing changes unless the trip manager clicks it; then the change agent revises the package and every check runs again.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "change_id": {
+            "type": "string",
+            "description": "The open change to revise, e.g. chg-006. Must be waiting for the trip manager's decision."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "What the change agent should do, written the way the trip manager would put it."
+          }
+        },
+        "required": [
+          "change_id",
+          "instructions"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

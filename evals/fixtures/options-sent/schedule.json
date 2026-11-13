@@ -1,0 +1,232 @@
+{
+ "note": "Every flight in demo week, stored once. Times are US Eastern departure times; arrivals are computed by the flight time tool. trip is null for positioning legs.",
+ "legs": [
+  {
+   "id": "B-1",
+   "trip": "B",
+   "kind": "client",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "BED",
+   "destination": "ACK",
+   "departure": "2026-10-26T09:00"
+  },
+  {
+   "id": "B-2",
+   "trip": "B",
+   "kind": "client",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "ACK",
+   "destination": "BED",
+   "departure": "2026-10-26T15:00"
+  },
+  {
+   "id": "P-1028",
+   "trip": null,
+   "kind": "positioning",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "BED",
+   "destination": "TEB",
+   "departure": "2026-10-28T18:00"
+  },
+  {
+   "id": "A1-1",
+   "trip": "A1",
+   "kind": "client",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "TEB",
+   "destination": "BED",
+   "departure": "2026-10-29T08:00"
+  },
+  {
+   "id": "A1-2",
+   "trip": "A1",
+   "kind": "client",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "BED",
+   "destination": "PBI",
+   "departure": "2026-10-29T17:00"
+  },
+  {
+   "id": "P-1030",
+   "trip": null,
+   "kind": "positioning",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "PBI",
+   "destination": "BED",
+   "departure": "2026-10-30T09:00"
+  },
+  {
+   "id": "C-1",
+   "trip": "C",
+   "kind": "client",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "BED",
+   "destination": "HPN",
+   "departure": "2026-10-30T14:00"
+  },
+  {
+   "id": "C-2",
+   "trip": "C",
+   "kind": "client",
+   "aircraft": "N307LH",
+   "crew": "whitlock-reyes",
+   "origin": "HPN",
+   "destination": "BED",
+   "departure": "2026-10-30T18:00"
+  },
+  {
+   "id": "D-1",
+   "trip": "D",
+   "kind": "client",
+   "aircraft": "N350LH",
+   "crew": "brooks-okafor",
+   "origin": "BED",
+   "destination": "IAD",
+   "departure": "2026-10-26T07:30"
+  },
+  {
+   "id": "D-2",
+   "trip": "D",
+   "kind": "client",
+   "aircraft": "N350LH",
+   "crew": "brooks-okafor",
+   "origin": "IAD",
+   "destination": "BED",
+   "departure": "2026-10-26T17:00"
+  },
+  {
+   "id": "E-1",
+   "trip": "E",
+   "kind": "client",
+   "aircraft": "N350LH",
+   "crew": "brooks-okafor",
+   "origin": "BED",
+   "destination": "PBI",
+   "departure": "2026-10-28T09:00"
+  },
+  {
+   "id": "E-2",
+   "trip": "E",
+   "kind": "client",
+   "aircraft": "N350LH",
+   "crew": "brooks-okafor",
+   "origin": "PBI",
+   "destination": "BED",
+   "departure": "2026-10-28T15:00"
+  },
+  {
+   "id": "P-1101A",
+   "trip": null,
+   "kind": "positioning",
+   "aircraft": "N350LH",
+   "crew": "brooks-okafor",
+   "origin": "BED",
+   "destination": "PBI",
+   "departure": "2026-11-01T07:30"
+  },
+  {
+   "id": "A2-1",
+   "trip": "A2",
+   "kind": "client",
+   "aircraft": "N350LH",
+   "crew": "brooks-okafor",
+   "origin": "PBI",
+   "destination": "TEB",
+   "departure": "2026-11-01T12:00"
+  },
+  {
+   "id": "P-1101B",
+   "trip": null,
+   "kind": "positioning",
+   "aircraft": "N350LH",
+   "crew": "brooks-okafor",
+   "origin": "TEB",
+   "destination": "BED",
+   "departure": "2026-11-01T16:00"
+  },
+  {
+   "id": "G-1",
+   "trip": "G",
+   "kind": "client",
+   "aircraft": "N560LH",
+   "crew": "delgado-lau",
+   "origin": "TEB",
+   "destination": "PBI",
+   "departure": "2026-10-26T10:00"
+  },
+  {
+   "id": "G-2",
+   "trip": "G",
+   "kind": "client",
+   "aircraft": "N560LH",
+   "crew": "delgado-lau",
+   "origin": "PBI",
+   "destination": "TEB",
+   "departure": "2026-10-27T14:00"
+  },
+  {
+   "id": "H-1",
+   "trip": "H",
+   "kind": "client",
+   "aircraft": "N560LH",
+   "crew": "delgado-lau",
+   "origin": "TEB",
+   "destination": "IAD",
+   "departure": "2026-10-29T07:00"
+  },
+  {
+   "id": "H-2",
+   "trip": "H",
+   "kind": "client",
+   "aircraft": "N560LH",
+   "crew": "delgado-lau",
+   "origin": "IAD",
+   "destination": "TEB",
+   "departure": "2026-10-29T11:00"
+  },
+  {
+   "id": "I-1",
+   "trip": "I",
+   "kind": "client",
+   "aircraft": "N560LH",
+   "crew": "delgado-lau",
+   "origin": "TEB",
+   "destination": "ACK",
+   "departure": "2026-10-31T09:00"
+  },
+  {
+   "id": "I-2",
+   "trip": "I",
+   "kind": "client",
+   "aircraft": "N560LH",
+   "crew": "delgado-lau",
+   "origin": "ACK",
+   "destination": "TEB",
+   "departure": "2026-10-31T17:00"
+  }
+ ],
+ "maintenance": [
+  {
+   "aircraft": "N307LH",
+   "airport": "BED",
+   "start": "2026-10-27T08:00",
+   "end": "2026-10-27T16:00",
+   "note": "Scheduled inspection"
+  }
+ ],
+ "standby": [
+  {
+   "crew": "nandakumar-kessler",
+   "airport": "BED",
+   "start": "2026-10-29T12:00",
+   "end": "2026-10-29T20:00"
+  }
+ ]
+}

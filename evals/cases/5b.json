@@ -1,0 +1,33 @@
+{
+  "id": "5b",
+  "title": "Boundary: add three passengers (5 to 8) goes to sales",
+  "type": "Boundary",
+  "expected": "Adding three passengers (5 to 8) exceeds the Phenom's 7 seats: seats checked; routed to sales for a re-quote with vendor updates held; no change package.",
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Three more for Thursday",
+    "body": "Hi team,\n\nThree more people will join Thursday's flight from Bedford to Palm Beach: Daniel Moreau, Leah Whitfield and Tomas Reyna. That makes eight on that leg.\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "expect": [
+    {
+      "type": "status_any",
+      "any_of": [
+        "Waiting: Routed to sales",
+        "Needs review: Routed to sales"
+      ]
+    },
+    {
+      "type": "routed_to_sales"
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        "check_capacity"
+      ]
+    },
+    {
+      "type": "no_change_package"
+    }
+  ],
+  "start": []
+}

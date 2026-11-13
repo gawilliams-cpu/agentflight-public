@@ -1,0 +1,27 @@
+{
+  "id": "H2",
+  "title": "\"Would 17:30 work instead?\"",
+  "type": "Trip chat",
+  "expected": "Runs the crew duty check for 17:30 and answers legal, 13 h 43 min. Changes nothing.",
+  "kind": "chat",
+  "fixture": "after-demo-2",
+  "trip": "A1",
+  "question": "Would 17:30 work instead?",
+  "expect": [
+    {
+      "type": "chat_tools",
+      "include": [
+        "check_crew_duty"
+      ]
+    },
+    {
+      "type": "answer_matches",
+      "any": [
+        "13\\s*h\\s*43",
+        "13h\\s*43",
+        "13:43"
+      ],
+      "means": "says 13 h 43 min"
+    }
+  ]
+}

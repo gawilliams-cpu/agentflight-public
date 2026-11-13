@@ -1,0 +1,45 @@
+{
+  "id": "W1",
+  "title": "Trip manager waives the change fee for a VIP",
+  "type": "Approval policy",
+  "expected": "The trip manager waives the change fee for a VIP: change package with leg 2 at 17:00; the $500 fee listed but waived; nothing charged.",
+  "start": [],
+  "email": {
+    "from": "morgan.pryce@haldenridge.example.com",
+    "subject": "Thursday — Bedford departure",
+    "body": "Hi team,\n\nAlex's afternoon meeting on Thursday is running long. Could we push the departure from Bedford to Palm Beach back an hour, to 5pm? Everything else can stay as planned.\n\nThanks,\nMorgan\n\nMorgan Pryce\nExecutive Assistant to Alex Halden\nHalden Ridge Partners"
+  },
+  "revision": {
+    "previous_summary": "Move Thu 10/29 BED→PBI (A1-2) from 16:00 to 17:00. Crew duty legal (13h13m). Fee: $500 departure time change. Updates to BED FBO, caterer, PBI FBO, crew, client.",
+    "instructions": "Halden is a VIP client — waive the change fee."
+  },
+  "expect": [
+    {
+      "type": "status",
+      "status": "Needs approval",
+      "reason": "Change package"
+    },
+    {
+      "type": "record_update",
+      "leg_id": "A1-2",
+      "departure": "2026-10-29T17:00"
+    },
+    {
+      "type": "fee_total",
+      "amount": 0
+    },
+    {
+      "type": "fee_waived",
+      "charge": "departure_time_change"
+    },
+    {
+      "type": "checks_run",
+      "include": [
+        [
+          "check_crew_duty",
+          "find_duty_fixes"
+        ]
+      ]
+    }
+  ]
+}
